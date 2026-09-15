@@ -14,12 +14,16 @@ public class TileRenderer {
             new Color(99, 214, 32),
     };
 
+    private int getVariant(Tile tile, int variantCount) {
+        int hash = tile.getX() * 73856093 ^ tile.getY() * 19349663;
+        return Math.floorMod(hash, variantCount);
+    }
+
     public void render(Tile tile, Graphics2D g) {
-        //int variant = hash(tile.getY(), tile.getY());
         int screenX = tile.getX() * World.TILE_SIZE;
         int screenY = tile.getY() * World.TILE_SIZE;
 
-        g.setColor(grassColors[0]);
+        g.setColor(grassColors[getVariant(tile, grassColors.length)]);
         g.fillRect(screenX, screenY, World.TILE_SIZE, World.TILE_SIZE);
     }
 }
