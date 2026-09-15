@@ -11,7 +11,7 @@ public class World {
         for (int i = 0; i < tiles.length; i++) {
             int x = i % WORLD_WIDTH;
             int y = i / WORLD_WIDTH;
-            tiles[i] = new Tile(x, y, TileType.GRASS, 3);
+            tiles[i] = new Tile(x, y, TileType.GRASS);
         }
     }
 

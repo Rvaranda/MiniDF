@@ -1,12 +1,12 @@
 package main;
 
+import renderer.TileRenderer;
+
 import javax.swing.*;
 import java.awt.*;
-import java.util.Random;
 
 public class GameWindow extends JPanel implements Runnable {
     Thread thread;
-    Random random = new Random();
     private boolean running = false;
 
     public static final int WIDTH = 1280;
@@ -14,15 +14,7 @@ public class GameWindow extends JPanel implements Runnable {
     public static final int FPS = 60;
 
     private final World world = new World();
-
-    private final Color[] grassColors = new Color[] {
-            new Color(96, 194, 89),
-            new Color(111, 219, 61),
-            new Color(168, 222, 102),
-            new Color(48, 150, 42),
-            new Color(101, 191, 112),
-            new Color(99, 214, 32),
-    };
+    private final TileRenderer tileRenderer = new TileRenderer();
 
     public GameWindow() {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -52,17 +44,7 @@ public class GameWindow extends JPanel implements Runnable {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         for (Tile t : world.getTiles()) {
-            Color color;
-            int screenX = t.getX() * World.TILE_SIZE;
-            int screenY = t.getY() * World.TILE_SIZE;
-
-            switch (t.getType()) {
-                case GRASS -> color = grassColors[t.getVisualVariant()];
-                default -> color = Color.white;
-            }
-
-            g2d.setColor(color);
-            g2d.fillRect(screenX, screenY, World.TILE_SIZE, World.TILE_SIZE);
+            tileRenderer.render(t, g2d);
         }
     }
 
