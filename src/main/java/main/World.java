@@ -17,6 +17,8 @@ public class World {
             int y = i / WORLD_WIDTH;
             tiles[i] = new Tile(x, y, TileType.GRASS);
         }
+
+        spawnTrees(100);
     }
 
     public Tile[] getTiles() {

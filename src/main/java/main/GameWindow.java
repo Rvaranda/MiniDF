@@ -61,9 +61,6 @@ public class GameWindow extends JPanel implements Runnable {
 
     public void start() {
         running = true;
-
-        world.spawnTrees(100);
-
         thread = new Thread(this);
         thread.start();
     }
