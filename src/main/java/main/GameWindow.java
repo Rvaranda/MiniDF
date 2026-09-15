@@ -46,7 +46,7 @@ public class GameWindow extends JPanel implements Runnable {
 
             @Override
             public void keyReleased(KeyEvent e) {
-                super.keyPressed(e);
+                super.keyReleased(e);
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_W -> upPressed = false;
                     case KeyEvent.VK_S -> downPressed = false;
