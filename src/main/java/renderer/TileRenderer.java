@@ -19,9 +19,12 @@ public class TileRenderer {
         return Math.floorMod(hash, variantCount);
     }
 
-    public void render(Tile tile, Graphics2D g) {
-        int screenX = tile.getX() * World.TILE_SIZE;
-        int screenY = tile.getY() * World.TILE_SIZE;
+    public void render(Tile tile, Camera camera, Graphics2D g) {
+        int worldX = tile.getX() * World.TILE_SIZE;
+        int worldY = tile.getY() * World.TILE_SIZE;
+
+        int screenX = worldX - (int)camera.getX();
+        int screenY = worldY - (int)camera.getY();
 
         g.setColor(grassColors[getVariant(tile, grassColors.length)]);
         g.fillRect(screenX, screenY, World.TILE_SIZE, World.TILE_SIZE);

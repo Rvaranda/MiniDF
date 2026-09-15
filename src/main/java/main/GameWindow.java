@@ -1,9 +1,12 @@
 package main;
 
 import renderer.TileRenderer;
+import renderer.Camera;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class GameWindow extends JPanel implements Runnable {
     Thread thread;
@@ -15,13 +18,46 @@ public class GameWindow extends JPanel implements Runnable {
 
     private final World world = new World();
     private final TileRenderer tileRenderer = new TileRenderer();
+    private final Camera camera = new Camera();
+
+    private double cameraSpeed = 300;
+    private boolean upPressed = false;
+    private boolean downPressed = false;
+    private boolean leftPressed = false;
+    private boolean rightPressed = false;
 
     public GameWindow() {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setDoubleBuffered(true);
         setFocusable(true);
         setBackground(Color.black);
+
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_W -> upPressed = true;
+                    case KeyEvent.VK_S -> downPressed = true;
+                    case KeyEvent.VK_A -> leftPressed = true;
+                    case KeyEvent.VK_D -> rightPressed = true;
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                super.keyPressed(e);
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_W -> upPressed = false;
+                    case KeyEvent.VK_S -> downPressed = false;
+                    case KeyEvent.VK_A -> leftPressed = false;
+                    case KeyEvent.VK_D -> rightPressed = false;
+                }
+            }
+        });
     }
+
+
 
     public void start() {
         running = true;
@@ -34,7 +70,10 @@ public class GameWindow extends JPanel implements Runnable {
     }
 
     void update(double delta) {
-
+        if (upPressed) camera.move(0, -cameraSpeed * delta);
+        if (downPressed) camera.move(0, cameraSpeed * delta);
+        if (rightPressed) camera.move(cameraSpeed * delta, 0);
+        if (leftPressed) camera.move(-cameraSpeed * delta, 0);
     }
 
     @Override
@@ -44,7 +83,7 @@ public class GameWindow extends JPanel implements Runnable {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         for (Tile t : world.getTiles()) {
-            tileRenderer.render(t, g2d);
+            tileRenderer.render(t, camera, g2d);
         }
     }
 
