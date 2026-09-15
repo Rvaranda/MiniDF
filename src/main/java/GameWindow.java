@@ -60,15 +60,11 @@ public class GameWindow extends JPanel implements Runnable {
     @Override
     public void run() {
         double frameMinDuration = 1.0 / FPS;
-        //double frameDurationCounter = 0.0;
         final double TICK = 1.0 / 20.0;
         double acumulator = 0.0;
 
-        double lastUpdate = System.nanoTime();
+        long lastUpdate = System.nanoTime();
         double delta;
-
-//        int fpsCounter = 0;
-        double timer = 0.0;
 
         while (running) {
             long frameStart = System.nanoTime();
@@ -85,18 +81,12 @@ public class GameWindow extends JPanel implements Runnable {
 
             repaint();
 
-            timer += delta;
-//            fpsCounter++;
+            double frameDuration = (System.nanoTime() - frameStart) / 1_000_000_000.0;
+            double remainingTime = frameMinDuration - frameDuration;
 
-            if (timer >= 1.0) {
-                //System.out.println("FPS: " + fpsCounter);
-//                fpsCounter = 0;
-                timer = 0.0;
-            }
-
-            if (lastUpdate - frameStart < frameMinDuration) {
+            if (remainingTime > 0) {
                 try {
-                    Thread.sleep((long) (frameMinDuration - (lastUpdate - frameStart)));
+                    Thread.sleep((long) (remainingTime * 1000.0));
                 }
                 catch (Exception e) {
                     e.printStackTrace();
