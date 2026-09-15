@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class GameWindow extends JPanel implements Runnable {
     Thread thread;
@@ -20,11 +22,15 @@ public class GameWindow extends JPanel implements Runnable {
     private final TileRenderer tileRenderer = new TileRenderer();
     private final Camera camera = new Camera();
 
+    // Camera
     private double cameraSpeed = 300;
     private boolean upPressed = false;
     private boolean downPressed = false;
     private boolean leftPressed = false;
     private boolean rightPressed = false;
+
+    // Mouse
+    private int mouseX, mouseY;
 
     public GameWindow() {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -55,9 +61,27 @@ public class GameWindow extends JPanel implements Runnable {
                 }
             }
         });
+
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                mouseX = e.getX();
+                mouseY = e.getY();
+
+                int worldX = mouseX + (int) camera.getX();
+                int worldY = mouseY + (int) camera.getY();
+
+                int tileX = worldX / World.TILE_SIZE;
+                int tileY = worldY / World.TILE_SIZE;
+
+                Tile clickedTile = world.getTile(tileX, tileY);
+
+                System.out.println("X: " + clickedTile.getX() + "\tY: " + clickedTile.getY());
+                System.out.println("Tree: " + clickedTile.hasTree());
+            }
+        });
     }
-
-
 
     public void start() {
         running = true;
