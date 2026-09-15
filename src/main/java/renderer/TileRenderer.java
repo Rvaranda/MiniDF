@@ -14,6 +14,8 @@ public class TileRenderer {
             new Color(99, 214, 32),
     };
 
+    private final Color treeColor = new Color(80, 48, 26);
+
     private int getVariant(Tile tile, int variantCount) {
         int hash = tile.getX() * 73856093 ^ tile.getY() * 19349663;
         return Math.floorMod(hash, variantCount);
@@ -26,7 +28,9 @@ public class TileRenderer {
         int screenX = worldX - (int)camera.getX();
         int screenY = worldY - (int)camera.getY();
 
-        g.setColor(grassColors[getVariant(tile, grassColors.length)]);
+        Color color = tile.hasTree() ? treeColor : grassColors[getVariant(tile, grassColors.length)];
+
+        g.setColor(color);
         g.fillRect(screenX, screenY, World.TILE_SIZE, World.TILE_SIZE);
     }
 }
