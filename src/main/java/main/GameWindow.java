@@ -69,11 +69,15 @@ public class GameWindow extends JPanel implements Runnable {
         running = false;
     }
 
-    void update(double delta) {
+    void updateCamera(double delta) {
         if (upPressed) camera.move(0, -cameraSpeed * delta);
         if (downPressed) camera.move(0, cameraSpeed * delta);
         if (rightPressed) camera.move(cameraSpeed * delta, 0);
         if (leftPressed) camera.move(-cameraSpeed * delta, 0);
+    }
+
+    void update(double delta) {
+
     }
 
     @Override
@@ -108,6 +112,8 @@ public class GameWindow extends JPanel implements Runnable {
                 update(TICK);
                 acumulator -= TICK;
             }
+
+            updateCamera(delta);
 
             repaint();
 
