@@ -1,3 +1,5 @@
+package main;
+
 public class World {
     public static final int TILE_SIZE = 16;
     public static final int WORLD_WIDTH = 128;
