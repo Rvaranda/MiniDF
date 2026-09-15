@@ -1,11 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.util.ArrayList;
-import java.util.List;
 
 public class GameWindow extends JPanel implements Runnable {
     Thread thread;
+    private boolean running = false;
 
     public static final int WIDTH = 1280;
     public static final int HEIGHT = 720;
@@ -20,8 +18,13 @@ public class GameWindow extends JPanel implements Runnable {
     }
 
     public void start() {
+        running = true;
         thread = new Thread(this);
         thread.start();
+    }
+
+    public void stop() {
+        running = false;
     }
 
     void update(double delta) {
@@ -40,6 +43,8 @@ public class GameWindow extends JPanel implements Runnable {
         long frameStart;
         double frameMinDuration = 1000.0 / FPS;
         double frameDurationCounter = 0.0;
+        final double TICK = 1.0 / 20.0;
+        double acumulator = 0.0;
 
         double lastUpdate = System.currentTimeMillis();
         double delta;
@@ -47,12 +52,17 @@ public class GameWindow extends JPanel implements Runnable {
         int fpsCounter = 0;
         double timer = 0.0;
 
-        while (thread.isAlive()) {
-            frameStart = System.currentTimeMillis();
+        while (running) {
+            frameStart = System.nanoTime();
 
             delta = frameStart - lastUpdate;
+            acumulator += delta;
 
-            update(delta / 1000.0);
+            while (acumulator >= TICK) {
+                update(TICK);
+                acumulator -= TICK;
+            }
+
             repaint();
 
             timer += delta;
@@ -64,7 +74,7 @@ public class GameWindow extends JPanel implements Runnable {
                 timer = 0.0;
             }
 
-            lastUpdate = System.currentTimeMillis();
+            lastUpdate = System.nanoTime();
             if (lastUpdate - frameStart < frameMinDuration) {
                 try {
                     Thread.sleep((long) (frameMinDuration - (lastUpdate - frameStart)));
