@@ -72,13 +72,19 @@ public class GameWindow extends JPanel implements Runnable {
                 int worldX = mouseX + (int) camera.getX();
                 int worldY = mouseY + (int) camera.getY();
 
-                int tileX = worldX / World.TILE_SIZE;
-                int tileY = worldY / World.TILE_SIZE;
+                if (worldX >= 0 && worldX < World.WORLD_WIDTH * World.TILE_SIZE
+                && worldY >= 0 && worldY < World.WORLD_HEIGHT * World.TILE_SIZE) {
 
-                Tile clickedTile = world.getTile(tileX, tileY);
+                    int tileX = worldX / World.TILE_SIZE;
+                    int tileY = worldY / World.TILE_SIZE;
 
-                System.out.println("X: " + clickedTile.getX() + "\tY: " + clickedTile.getY());
-                System.out.println("Tree: " + clickedTile.hasTree());
+                    Tile clickedTile = world.getTile(tileX, tileY);
+
+                    System.out.println("WorldX: " + worldX + "\tWorldY: " + worldY);
+                    System.out.println("TileX: " + tileX + "\tTileY: " + tileY);
+                    System.out.println("X: " + clickedTile.getX() + "\tY: " + clickedTile.getY());
+                    System.out.println("Tree: " + clickedTile.hasTree());
+                }
             }
         });
     }
