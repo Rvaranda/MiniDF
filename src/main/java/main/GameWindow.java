@@ -26,6 +26,8 @@ public class GameWindow extends JPanel implements Runnable {
     public static final int FPS = 60;
 
     private final World world = new World();
+    private Pathfinder pathfinder = new Pathfinder();
+    private Dwarf dwarf;
 
     // Renderers
     private final TileRenderer tileRenderer = new TileRenderer();
@@ -82,25 +84,24 @@ public class GameWindow extends JPanel implements Runnable {
                 int worldX = mouseX + (int) camera.getX();
                 int worldY = mouseY + (int) camera.getY();
 
-                if (worldX >= 0 && worldX < World.WORLD_WIDTH * World.TILE_SIZE
-                && worldY >= 0 && worldY < World.WORLD_HEIGHT * World.TILE_SIZE) {
+                int tileX = worldX / World.TILE_SIZE;
+                int tileY = worldY / World.TILE_SIZE;
 
-                    int tileX = worldX / World.TILE_SIZE;
-                    int tileY = worldY / World.TILE_SIZE;
+                Tile clickedTile = world.getTile(tileX, tileY);
 
-                    Tile clickedTile = world.getTile(tileX, tileY);
-
+                if (clickedTile != null) {
                     System.out.println("WorldX: " + worldX + "\tWorldY: " + worldY);
                     System.out.println("TileX: " + tileX + "\tTileY: " + tileY);
                     System.out.println("X: " + clickedTile.getX() + "\tY: " + clickedTile.getY());
                     System.out.println("Tree: " + clickedTile.hasTree());
+
+                    List<Tile> path = pathfinder.findPath(world, world.getTile(dwarf.getX(), dwarf.getY()), clickedTile);
+                    dwarf.setPath(path.toArray(Tile[]::new));
                 }
             }
         });
 
-        Pathfinder pathfinder = new Pathfinder();
-        List<Tile> path = pathfinder.findPath(world, world.getTile(1, 1), world.getTile(6, 3));
-        path.forEach(t -> System.out.println("(" + t.getX() + ", " + t.getY() + ")"));
+        dwarf = world.getDwarves().getFirst();
     }
 
     public void start() {
@@ -121,7 +122,7 @@ public class GameWindow extends JPanel implements Runnable {
     }
 
     void update(double delta) {
-
+        dwarf.update();
     }
 
     @Override
