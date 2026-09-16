@@ -38,6 +38,10 @@ public class World {
         return isValidPosition(x, y) ? tiles[y * WORLD_WIDTH + x] : null;
     }
 
+    public void spawnTree(int x, int y) {
+        getTile(x, y).spawnTree();
+    }
+
     public void spawnTrees(int amount) {
         for (int i = 0; i < amount; i++) {
             tiles[random.nextInt(tiles.length)].spawnTree();
@@ -51,7 +55,7 @@ public class World {
         while (getTile(spawnX, spawnY).hasTree()) {
             spawnX++;
             spawnY++;
-            if (spawnX > 127 || spawnY > 127) return;
+            if (spawnX > WORLD_WIDTH || spawnY > WORLD_HEIGHT) return;
         }
 
         dwarves.add(new Dwarf(spawnX, spawnY));
