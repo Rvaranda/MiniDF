@@ -25,12 +25,17 @@ public class World {
         spawnDwarf(10, 10);
     }
 
+    public boolean isValidPosition(int x, int y) {
+        return x >= 0 && x < WORLD_WIDTH &&
+                y >= 0 && y < WORLD_HEIGHT;
+    }
+
     public Tile[] getTiles() {
         return tiles;
     }
 
     public Tile getTile(int x, int y) {
-        return tiles[y * WORLD_WIDTH + x];
+        return isValidPosition(x, y) ? tiles[y * WORLD_WIDTH + x] : null;
     }
 
     public void spawnTrees(int amount) {
