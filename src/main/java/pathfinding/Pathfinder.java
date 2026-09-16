@@ -18,11 +18,11 @@ public class Pathfinder {
         }
     }
 
-    private int heuristic(Node node, Tile tile) {
-        int x1 = node.tile.getX();
-        int y1 = node.tile.getY();
-        int x2 = tile.getX();
-        int y2 = tile.getY();
+    private int heuristic(Tile from, Tile to) {
+        int x1 = from.getX();
+        int y1 = from.getY();
+        int x2 = to.getX();
+        int y2 = to.getY();
 
         int dx = Math.abs(x1 - x2);
         int dy = Math.abs(y1 - y2);
@@ -30,16 +30,9 @@ public class Pathfinder {
         return 10 * (dx + dy) - 6 * Math.min(dx, dy);
     }
 
-    private int distance(Node n1, Node n2) {
-        int x1 = n1.tile.getX();
-        int y1 = n1.tile.getY();
-        int x2 = n2.tile.getX();
-        int y2 = n2.tile.getY();
-
-        int diffX = Math.abs(x1 - x2);
-        int diffY = Math.abs(y1 - y2);
-
-        return diffX + diffY > 1 ? 14 : 10;
+    private int movementCost(Tile from, Tile to) {
+        boolean diagonal = from.getX() != to.getX() && from.getY() != to.getY();
+        return diagonal ? 14 : 10;
     }
 
     private boolean hasReachedGoal(Tile current, Tile goal) {
@@ -51,9 +44,9 @@ public class Pathfinder {
         return x1 == x2 && y1 == y2;
     }
 
-    private Node[] getNeighbors(World world, Node node) {
-        int x = node.tile.getX();
-        int y = node.tile.getY();
+    private Tile[] getNeighbors(World world, Tile tile) {
+        int x = tile.getX();
+        int y = tile.getY();
         int[][] directions = {
                 {0, -1}, { 0, 1},
                 {1,  0}, {-1, 0},
@@ -61,7 +54,7 @@ public class Pathfinder {
                 {-1, 1}, {1, 1}
         };
 
-        List<Node> nodes = new ArrayList<>();
+        List<Tile> tiles = new ArrayList<>();
 
         for (int[] dir : directions) {
             int dx = dir[0];
@@ -88,12 +81,10 @@ public class Pathfinder {
                     continue;
             }
 
-            Node neighborNode = new Node(neighbor);
-            neighborNode.g = diagonal ? node.g + 14 : node.g + 10;
-            nodes.add(neighborNode);
+            tiles.add(neighbor);
         }
 
-        return nodes.toArray(Node[]::new);
+        return tiles.toArray(Tile[]::new);
     }
 
     private List<Tile> reconstructPath(Node node) {
@@ -110,9 +101,10 @@ public class Pathfinder {
         Comparator<Node> comparator = Comparator.comparingInt(n -> n.f);
         Queue<Node> open = new PriorityQueue<>(comparator);
         List<Node> closed = new ArrayList<>();
+        Map<Tile, Node> nodes = new HashMap<>();
 
-        Node start = new Node(origin);
-        start.h = heuristic(start, destination);
+        Node start = nodes.computeIfAbsent(origin, Node::new);
+        start.h = heuristic(origin, destination);
         start.f = start.g + start.h;
         open.add(start);
 
@@ -124,15 +116,26 @@ public class Pathfinder {
                 return reconstructPath(current);
             }
 
-            Node[] neighbors = getNeighbors(world, current);
-            for (Node neighbor : neighbors) {
-                if (closed.contains(neighbor)) {
+            Tile[] neighbors = getNeighbors(world, current.tile);
+            for (Tile neighbor : neighbors) {
+                Node neighborNode = nodes.computeIfAbsent(neighbor, Node::new);
+                if (closed.contains(neighborNode)) {
                     continue;
                 }
-                if (!open.contains(neighbor)) open.add(neighbor);
-                neighbor.h = heuristic(neighbor, destination);
-                neighbor.f = neighbor.g + neighbor.h;
-                neighbor.parent = current;
+
+                int tentativeG = current.g + movementCost(current.tile, neighbor);
+                if (!open.contains(neighborNode)) {
+                    neighborNode.g = tentativeG;
+                    neighborNode.h = heuristic(neighbor, destination);
+                    neighborNode.f = neighborNode.g + neighborNode.h;
+                    neighborNode.parent = current;
+                    open.add(neighborNode);
+                }
+                else if (tentativeG < neighborNode.g) {
+                    neighborNode.g = tentativeG;
+                    neighborNode.f = neighborNode.g + neighborNode.h;
+                    neighborNode.parent = current;
+                }
             }
         }
 
