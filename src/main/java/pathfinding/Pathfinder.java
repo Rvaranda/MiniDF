@@ -98,6 +98,8 @@ public class Pathfinder {
     }
 
     public List<Tile> findPath(World world, Tile origin, Tile destination) {
+        if (origin == null || destination == null) return List.of();
+
         Comparator<Node> comparator = Comparator.comparingInt(n -> n.f);
         Queue<Node> open = new PriorityQueue<>(comparator);
         List<Node> closed = new ArrayList<>();
@@ -139,6 +141,6 @@ public class Pathfinder {
             }
         }
 
-        return null;
+        return List.of();
     }
 }
