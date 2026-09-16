@@ -32,7 +32,7 @@ public class Tile {
     public int getX() { return x; }
     public int getY() { return y; }
 
-    public boolean isTravessable() {
+    public boolean isTraversable() {
         return !hasTree;
     }
 }

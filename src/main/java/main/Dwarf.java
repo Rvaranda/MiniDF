@@ -1,7 +1,7 @@
 package main;
 
 public class Dwarf {
-    public int x, y;
+    private int x, y;
 
     public Dwarf(int x, int y) {
         this.x = x;
