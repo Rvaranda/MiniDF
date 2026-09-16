@@ -1,5 +1,6 @@
 package main;
 
+import renderer.DwarfRenderer;
 import renderer.TileRenderer;
 import renderer.Camera;
 
@@ -19,7 +20,10 @@ public class GameWindow extends JPanel implements Runnable {
     public static final int FPS = 60;
 
     private final World world = new World();
+
+    // Renderers
     private final TileRenderer tileRenderer = new TileRenderer();
+    private final DwarfRenderer dwarfRenderer = new DwarfRenderer();
     private final Camera camera = new Camera();
 
     // Camera
@@ -119,6 +123,8 @@ public class GameWindow extends JPanel implements Runnable {
         for (Tile t : world.getTiles()) {
             tileRenderer.render(t, camera, g2d);
         }
+
+        world.getDwarves().forEach(d -> dwarfRenderer.render(d, camera, g2d));
     }
 
     @Override

@@ -1,5 +1,7 @@
 package main;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class World {
@@ -8,6 +10,7 @@ public class World {
     public static final int WORLD_HEIGHT = 128;
 
     private Tile[] tiles = new Tile[WORLD_WIDTH * WORLD_HEIGHT];
+    private List<Dwarf> dwarves = new ArrayList<>();
 
     Random random = new Random();
 
@@ -19,6 +22,7 @@ public class World {
         }
 
         spawnTrees(100);
+        spawnDwarf(10, 10);
     }
 
     public Tile[] getTiles() {
@@ -33,5 +37,22 @@ public class World {
         for (int i = 0; i < amount; i++) {
             tiles[random.nextInt(tiles.length)].spawnTree();
         }
+    }
+
+    public void spawnDwarf(int x, int y) {
+        int spawnX = x;
+        int spawnY = y;
+
+        while (getTile(spawnX, spawnY).hasTree()) {
+            spawnX++;
+            spawnY++;
+            if (spawnX > 127 || spawnY > 127) return;
+        }
+
+        dwarves.add(new Dwarf(spawnX, spawnY));
+    }
+
+    public List<Dwarf> getDwarves() {
+        return dwarves;
     }
 }
