@@ -1,15 +1,21 @@
 package main;
 
+import pathfinding.Pathfinder;
 import renderer.DwarfRenderer;
 import renderer.TileRenderer;
 import renderer.Camera;
 
 import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 
 public class GameWindow extends JPanel implements Runnable {
     Thread thread;
@@ -91,6 +97,10 @@ public class GameWindow extends JPanel implements Runnable {
                 }
             }
         });
+
+        Pathfinder pathfinder = new Pathfinder();
+        List<Tile> path = pathfinder.findPath(world, world.getTile(1, 1), world.getTile(6, 3));
+        path.forEach(t -> System.out.println("(" + t.getX() + ", " + t.getY() + ")"));
     }
 
     public void start() {
