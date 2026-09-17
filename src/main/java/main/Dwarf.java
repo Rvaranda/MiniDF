@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Dwarf {
     private int x, y;
-    private World world;
+    private final World world;
     private Tile[] path;
     private Job assignedJob;
     private int pathIndex;
