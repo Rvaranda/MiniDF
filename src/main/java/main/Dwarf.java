@@ -17,10 +17,16 @@ public class Dwarf {
 
     public void setPath(Tile[] path) {
         this.path = path;
+        pathIndex = 0;
     }
 
     public void update() {
-        if (path == null || path.length < 1) return;
+        if (path == null) return;
+        if (path.length <= 1) {
+            path = null;
+            pathIndex = 0;
+            return;
+        }
 
         pathIndex++;
         x = path[pathIndex].getX();
