@@ -58,7 +58,7 @@ public class World {
             if (spawnX > WORLD_WIDTH || spawnY > WORLD_HEIGHT) return;
         }
 
-        dwarves.add(new Dwarf(spawnX, spawnY));
+        dwarves.add(new Dwarf(this, spawnX, spawnY));
     }
 
     public List<Dwarf> getDwarves() {
