@@ -57,6 +57,7 @@ public class Dwarf {
     public int getY() { return y; }
     public Tile[] getPath() { return path; }
     public boolean isMoving() { return moving; }
+    public World getWorld() { return world; }
 
     public void setPath(Tile[] path) {
         if (path == null) return;
