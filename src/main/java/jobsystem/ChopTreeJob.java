@@ -9,23 +9,26 @@ public class ChopTreeJob extends Job {
     private Tile moveTarget;
     private int progress;
 
+    // TODO: GAMBIARRA - resolver quando possível
+    private Tile[] bestPathToThisJob = null;
+
     public ChopTreeJob(Tile target) {
         super(target);
         progress = 40;
     }
 
-    private Tile[] findPathNextToTree(World world) {
-        int dwarfX = getAssignedDwarf().getX();
-        int dwarfY = getAssignedDwarf().getY();
+    private Tile[] findPathNextToTree(Dwarf dwarf) {
+        int dwarfX = dwarf.getX();
+        int dwarfY = dwarf.getY();
         int targetX = getTarget().getX();
         int targetY = getTarget().getY();
-        Tile[] neighbors = world.getNeighbors(targetX, targetY);
+        Tile[] neighbors = dwarf.getWorld().getNeighbors(targetX, targetY);
         Tile[] shortestPath = null;
         for (Tile neighbor : neighbors) {
             if (!neighbor.isTraversable()) continue;
             Tile[] path = Pathfinder.findPath(
-                    world,
-                    world.getTile(dwarfX, dwarfY),
+                    dwarf.getWorld(),
+                    dwarf.getWorld().getTile(dwarfX, dwarfY),
                     neighbor
             ).toArray(Tile[]::new);
 
@@ -44,7 +47,18 @@ public class ChopTreeJob extends Job {
     @Override
     public void assignDwarf(Dwarf dwarf) {
         super.assignDwarf(dwarf);
-        dwarf.setPath(findPathNextToTree(dwarf.getWorld()));
+        if (bestPathToThisJob != null) {
+            dwarf.setPath(bestPathToThisJob);
+        }
+        else {
+            dwarf.setPath(findPathNextToTree(dwarf));
+        }
+    }
+
+    @Override
+    public boolean canDwarfExecute(Dwarf dwarf) {
+        bestPathToThisJob = findPathNextToTree(dwarf);
+        return bestPathToThisJob != null;
     }
 
     @Override

@@ -35,6 +35,7 @@ public abstract class Job {
         onComplete();
     }
 
+    public abstract boolean canDwarfExecute(Dwarf dwarf);
     public abstract void onComplete();
     public abstract void execute(World world);
 }

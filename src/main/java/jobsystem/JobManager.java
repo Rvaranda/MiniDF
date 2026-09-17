@@ -13,4 +13,11 @@ public class JobManager {
     public static List<Job> getAvailableJobs() {
         return jobs.stream().filter(Job::isAvailable).toList();
     }
+
+    public static Job pollFirstAvailableJob() {
+        if (jobs.isEmpty()) return null;
+        Job job = getAvailableJobs().getFirst();
+        jobs.remove(job);
+        return job;
+    }
 }
