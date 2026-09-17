@@ -2,6 +2,7 @@ package jobsystem;
 
 import main.Dwarf;
 import main.Tile;
+import main.World;
 
 public abstract class Job {
     private final Tile target;
@@ -30,5 +31,5 @@ public abstract class Job {
     }
 
     public abstract void onComplete();
-    public abstract void execute();
+    public abstract void execute(World world);
 }

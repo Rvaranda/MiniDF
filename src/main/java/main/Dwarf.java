@@ -45,7 +45,7 @@ public class Dwarf {
 
     private void updateJob() {
         if (assignedJob != null) {
-            assignedJob.execute();
+            assignedJob.execute(world);
         }
         else {
             List<Job> jobs = JobManager.getAvailableJobs();
@@ -55,6 +55,7 @@ public class Dwarf {
 
     public int getX() { return x; }
     public int getY() { return y; }
+    public Tile[] getPath() { return path; }
     public boolean isMoving() { return moving; }
 
     public void setPath(Tile[] path) {

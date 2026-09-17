@@ -2,6 +2,7 @@ package jobsystem;
 
 import main.Dwarf;
 import main.Tile;
+import main.World;
 
 public class ChopTreeJob extends Job {
     private Tile moveTarget;
@@ -10,17 +11,33 @@ public class ChopTreeJob extends Job {
         super(target);
     }
 
+    private Tile findTileNextToTree(World world) {
+        int dwarfX = getAssignedDwarf().getX();
+        int dwarfY = getAssignedDwarf().getY();
+        int targetX = getTarget().getX();
+        int targetY = getTarget().getY();
+
+        int dx = dwarfX - targetX;
+        int dy = dwarfY - targetY;
+
+        if (Math.abs(dx) >= Math.abs(dy)) {
+            return world.getTile(targetX + Integer.signum(dx), targetY);
+        }
+        else {
+            return world.getTile(targetX, targetY + Integer.signum(dy));
+        }
+    }
+
     @Override
     public void onComplete() {
         getTarget().chopTree();
     }
 
     @Override
-    public void execute() {
+    public void execute(World world) {
         Dwarf dwarf = getAssignedDwarf();
         if (moveTarget == null) {
-            // TODO: achar o melhor tile mais proximo da arvore para o anao se mover
-            // moveTarget = tile proximo da arvore
+            moveTarget = findTileNextToTree(world);
             dwarf.moveTo(moveTarget);
             return;
         }
