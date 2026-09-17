@@ -1,5 +1,7 @@
 package main;
 
+import jobsystem.ChopTreeJob;
+import jobsystem.JobManager;
 import pathfinding.Pathfinder;
 import renderer.DwarfRenderer;
 import renderer.TileRenderer;
@@ -95,8 +97,13 @@ public class GameWindow extends JPanel implements Runnable {
                     System.out.println("X: " + clickedTile.getX() + "\tY: " + clickedTile.getY());
                     System.out.println("Tree: " + clickedTile.hasTree());
 
-                    List<Tile> path = pathfinder.findPath(world, world.getTile(dwarf.getX(), dwarf.getY()), clickedTile);
-                    dwarf.setPath(path.toArray(Tile[]::new));
+                    if (clickedTile.hasTree()) {
+                        // criar job de cortar arvore
+                        JobManager.addJob(new ChopTreeJob(clickedTile));
+                    }
+
+//                    List<Tile> path = pathfinder.findPath(world, world.getTile(dwarf.getX(), dwarf.getY()), clickedTile);
+//                    dwarf.setPath(path.toArray(Tile[]::new));
                 }
             }
         });

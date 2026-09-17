@@ -1,8 +1,14 @@
 package main;
 
+import jobsystem.Job;
+import jobsystem.JobManager;
+
+import java.util.List;
+
 public class Dwarf {
     private int x, y;
     private Tile[] path;
+    private Job assignedJob;
     private int pathIndex;
 
     public Dwarf(int x, int y) {
@@ -10,17 +16,10 @@ public class Dwarf {
         this.y = y;
         pathIndex = 0;
         path = null;
+        assignedJob = null;
     }
 
-    public int getX() { return x; }
-    public int getY() { return y; }
-
-    public void setPath(Tile[] path) {
-        this.path = path;
-        pathIndex = 0;
-    }
-
-    public void update() {
+    private void updatePath() {
         if (path == null) return;
         if (path.length <= 1) {
             path = null;
@@ -36,5 +35,31 @@ public class Dwarf {
             pathIndex = 0;
             path = null;
         }
+    }
+
+    private void updateJob() {
+        if (assignedJob != null) return;
+
+        List<Job> jobs = JobManager.getAvailableJobs();
+        if (!jobs.isEmpty()) assignJob(jobs.getFirst());
+    }
+
+    public int getX() { return x; }
+    public int getY() { return y; }
+
+    public void setPath(Tile[] path) {
+        this.path = path;
+        pathIndex = 0;
+    }
+
+    public void clearJob() { assignedJob = null; }
+    public void assignJob(Job job) {
+        assignedJob = job;
+        job.assignDwarf(this);
+    }
+
+    public void update() {
+        updatePath();
+        updateJob();
     }
 }
