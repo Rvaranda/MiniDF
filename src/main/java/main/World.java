@@ -21,7 +21,25 @@ public class World {
             tiles[i] = new Tile(x, y, TileType.GRASS);
         }
 
-        spawnTrees(100);
+        //spawnTrees(100);
+        /*spawnTree(10,30);
+        spawnTree(10,29);
+        spawnTree(10,31);
+        spawnTree(9,30);
+        spawnTree(9,29);
+        spawnTree(11,31);
+        spawnTree(11,29);
+        spawnTree(9,31);*/
+
+        spawnTree(30,10);
+        spawnTree(29,10);
+        spawnTree(30,9);
+        spawnTree(30,11);
+        spawnTree(29,9);
+        spawnTree(31,11);
+        spawnTree(29,11);
+        spawnTree(31,9);
+
         spawnDwarf(10, 10);
     }
 
