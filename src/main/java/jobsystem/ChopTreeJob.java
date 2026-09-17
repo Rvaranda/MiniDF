@@ -20,19 +20,22 @@ public class ChopTreeJob extends Job {
         int targetX = getTarget().getX();
         int targetY = getTarget().getY();
         Tile[] neighbors = world.getNeighbors(targetX, targetY);
-        Tile[][] possiblePaths = new Tile[neighbors.length][];
-        for (int i = 0; i < neighbors.length; i++) {
-            possiblePaths[i] =
-                    Pathfinder.findPath(world, world.getTile(dwarfX, dwarfY), neighbors[i]).toArray(Tile[]::new);
+        Tile[] shortestPath = null;
+        for (Tile neighbor : neighbors) {
+            Tile[] path = Pathfinder.findPath(
+                    world,
+                    world.getTile(dwarfX, dwarfY),
+                    neighbor
+            ).toArray(Tile[]::new);
+
+            if (path.length == 0) continue;
+
+            if (shortestPath == null || path.length < shortestPath.length) {
+                shortestPath = path;
+            }
         }
 
-        Tile[] shortestPath = possiblePaths[0];
-        for (Tile[] path : possiblePaths) {
-            if (shortestPath.length == 0)
-                shortestPath = path;
-            else if (path.length < shortestPath.length)
-                shortestPath = path;
-        }
+        if (shortestPath == null) return null;
 
         return shortestPath[shortestPath.length - 1];
     }
@@ -47,7 +50,13 @@ public class ChopTreeJob extends Job {
         Dwarf dwarf = getAssignedDwarf();
         if (moveTarget == null) {
             moveTarget = findTileNextToTree(world);
-            dwarf.moveTo(moveTarget);
+            if (moveTarget != null)
+                dwarf.moveTo(moveTarget);
+            else {
+                changeState(JobState.DONE);
+                dwarf.clearJob();
+                assignDwarf(null);
+            }
             return;
         }
 
