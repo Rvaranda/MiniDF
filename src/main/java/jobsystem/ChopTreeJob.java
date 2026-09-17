@@ -3,6 +3,7 @@ package jobsystem;
 import main.Dwarf;
 import main.Tile;
 import main.World;
+import pathfinding.Pathfinder;
 
 public class ChopTreeJob extends Job {
     private Tile moveTarget;
@@ -18,16 +19,22 @@ public class ChopTreeJob extends Job {
         int dwarfY = getAssignedDwarf().getY();
         int targetX = getTarget().getX();
         int targetY = getTarget().getY();
-
-        int dx = dwarfX - targetX;
-        int dy = dwarfY - targetY;
-
-        if (Math.abs(dx) >= Math.abs(dy)) {
-            return world.getTile(targetX + Integer.signum(dx), targetY);
+        Tile[] neighbors = world.getNeighbors(targetX, targetY);
+        Tile[][] possiblePaths = new Tile[neighbors.length][];
+        for (int i = 0; i < neighbors.length; i++) {
+            possiblePaths[i] =
+                    Pathfinder.findPath(world, world.getTile(dwarfX, dwarfY), neighbors[i]).toArray(Tile[]::new);
         }
-        else {
-            return world.getTile(targetX, targetY + Integer.signum(dy));
+
+        Tile[] shortestPath = possiblePaths[0];
+        for (Tile[] path : possiblePaths) {
+            if (shortestPath.length == 0)
+                shortestPath = path;
+            else if (path.length < shortestPath.length)
+                shortestPath = path;
         }
+
+        return shortestPath[shortestPath.length - 1];
     }
 
     @Override
