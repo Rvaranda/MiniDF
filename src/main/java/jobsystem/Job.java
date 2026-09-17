@@ -23,6 +23,11 @@ public abstract class Job {
         state = JobState.ASSIGNED;
     }
 
+    // TODO: PROVISORIO - provalmente será removido futuramente
+    protected void changeState(JobState newState) {
+        state = newState;
+    }
+
     public void complete() {
         state = JobState.DONE;
         assignedDwarf.clearJob();
