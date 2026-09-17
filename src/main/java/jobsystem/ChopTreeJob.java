@@ -6,9 +6,11 @@ import main.World;
 
 public class ChopTreeJob extends Job {
     private Tile moveTarget;
+    private int progress;
 
     public ChopTreeJob(Tile target) {
         super(target);
+        progress = 40;
     }
 
     private Tile findTileNextToTree(World world) {
@@ -43,6 +45,11 @@ public class ChopTreeJob extends Job {
         }
 
         if (dwarf.isMoving()) return;
+
+        if (progress > 0) {
+            progress--;
+            return;
+        }
 
         complete();
     }
