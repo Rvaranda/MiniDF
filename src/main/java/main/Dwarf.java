@@ -59,8 +59,10 @@ public class Dwarf {
     public boolean isMoving() { return moving; }
 
     public void setPath(Tile[] path) {
+        if (path == null) return;
         this.path = path;
         pathIndex = 0;
+        moving = true;
     }
 
     public void clearJob() { assignedJob = null; }
