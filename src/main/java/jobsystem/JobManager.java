@@ -15,8 +15,10 @@ public class JobManager {
     }
 
     public static Job pollFirstAvailableJob() {
-        if (jobs.isEmpty()) return null;
-        Job job = getAvailableJobs().getFirst();
+        List<Job> availableJobs = getAvailableJobs();
+        if (availableJobs.isEmpty()) return null;
+
+        Job job = availableJobs.getFirst();
         jobs.remove(job);
         return job;
     }
