@@ -44,10 +44,13 @@ public class Dwarf {
     }
 
     private void updateJob() {
-        if (assignedJob != null) return;
-
-        List<Job> jobs = JobManager.getAvailableJobs();
-        if (!jobs.isEmpty()) assignJob(jobs.getFirst());
+        if (assignedJob != null) {
+            assignedJob.execute();
+        }
+        else {
+            List<Job> jobs = JobManager.getAvailableJobs();
+            if (!jobs.isEmpty()) assignJob(jobs.getFirst());
+        }
     }
 
     public int getX() { return x; }
