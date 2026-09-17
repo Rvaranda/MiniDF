@@ -28,8 +28,7 @@ public class GameWindow extends JPanel implements Runnable {
     public static final int FPS = 60;
 
     private final World world = new World();
-    private Pathfinder pathfinder = new Pathfinder();
-    private Dwarf dwarf;
+    private final Dwarf dwarf;
 
     // Renderers
     private final TileRenderer tileRenderer = new TileRenderer();

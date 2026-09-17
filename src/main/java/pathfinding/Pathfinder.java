@@ -18,7 +18,7 @@ public class Pathfinder {
         }
     }
 
-    private int heuristic(Tile from, Tile to) {
+    private static int heuristic(Tile from, Tile to) {
         int x1 = from.getX();
         int y1 = from.getY();
         int x2 = to.getX();
@@ -30,12 +30,12 @@ public class Pathfinder {
         return 10 * (dx + dy) - 6 * Math.min(dx, dy);
     }
 
-    private int movementCost(Tile from, Tile to) {
+    private static int movementCost(Tile from, Tile to) {
         boolean diagonal = from.getX() != to.getX() && from.getY() != to.getY();
         return diagonal ? 14 : 10;
     }
 
-    private boolean hasReachedGoal(Tile current, Tile goal) {
+    private static boolean hasReachedGoal(Tile current, Tile goal) {
         int x1 = current.getX();
         int y1 = current.getY();
         int x2 = goal.getX();
@@ -44,7 +44,7 @@ public class Pathfinder {
         return x1 == x2 && y1 == y2;
     }
 
-    private Tile[] getNeighbors(World world, Tile tile) {
+    private static Tile[] getNeighbors(World world, Tile tile) {
         int x = tile.getX();
         int y = tile.getY();
         int[][] directions = {
@@ -87,7 +87,7 @@ public class Pathfinder {
         return tiles.toArray(Tile[]::new);
     }
 
-    private List<Tile> reconstructPath(Node node) {
+    private static List<Tile> reconstructPath(Node node) {
         List<Tile> path = new ArrayList<>();
         while (node != null) {
             path.add(node.tile);
@@ -97,7 +97,7 @@ public class Pathfinder {
         return path.reversed();
     }
 
-    public List<Tile> findPath(World world, Tile origin, Tile destination) {
+    public static List<Tile> findPath(World world, Tile origin, Tile destination) {
         if (origin == null || destination == null) return List.of();
 
         Comparator<Node> comparator = Comparator.comparingInt(n -> n.f);
