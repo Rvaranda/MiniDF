@@ -32,6 +32,7 @@ public class World {
         spawnTree(9,31);*/
 
         spawnTree(30,10);
+        spawnTree(31,10);
         spawnTree(29,10);
         spawnTree(30,9);
         spawnTree(30,11);
@@ -39,6 +40,8 @@ public class World {
         spawnTree(31,11);
         spawnTree(29,11);
         spawnTree(31,9);
+
+        spawnTree(40, 40);
 
         spawnDwarf(10, 10);
     }
