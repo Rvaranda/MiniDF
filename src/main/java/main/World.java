@@ -38,6 +38,29 @@ public class World {
         return isValidPosition(x, y) ? tiles[y * WORLD_WIDTH + x] : null;
     }
 
+    public Tile[] getNeighbors(int x, int y) {
+        int[][] directions = {
+                {0, -1}, { 0, 1},
+                {1,  0}, {-1, 0},
+                {1, -1}, {-1, -1},
+                {-1, 1}, {1, 1}
+        };
+
+        List<Tile> neighbors = new ArrayList<>();
+
+        for (int[] dir : directions) {
+            int dx = dir[0];
+            int dy = dir[1];
+
+            int nx = x + dx;
+            int ny = y + dy;
+
+            neighbors.add(getTile(nx, ny));
+        }
+
+        return neighbors.toArray(Tile[]::new);
+    }
+
     public void spawnTree(int x, int y) {
         getTile(x, y).spawnTree();
     }
