@@ -84,7 +84,7 @@ public class HaulJob extends Job {
 
         // Anao comeca a levar o item até o destino
         if (!dwarf.isMoving() && (
-                dwarf.getX() != destinationX && dwarf.getY() != destinationY
+                dwarf.getX() != destinationX || dwarf.getY() != destinationY
                 )) {
             dwarf.setPath(pathFromItemToDest);
             return;
