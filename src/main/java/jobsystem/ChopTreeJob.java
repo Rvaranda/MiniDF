@@ -62,7 +62,7 @@ public class ChopTreeJob extends Job {
     }
 
     @Override
-    public void onComplete() {
+    public void onComplete(World world) {
         getTarget().chopTree();
     }
 
@@ -75,6 +75,6 @@ public class ChopTreeJob extends Job {
             return;
         }
 
-        complete();
+        complete(world);
     }
 }

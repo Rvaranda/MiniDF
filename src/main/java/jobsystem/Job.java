@@ -28,14 +28,14 @@ public abstract class Job {
         state = newState;
     }
 
-    public void complete() {
+    public void complete(World world) {
         state = JobState.DONE;
         assignedDwarf.clearJob();
         assignedDwarf = null;
-        onComplete();
+        onComplete(world);
     }
 
     public abstract boolean canDwarfExecute(Dwarf dwarf);
-    public abstract void onComplete();
+    public abstract void onComplete(World world);
     public abstract void execute(World world);
 }
