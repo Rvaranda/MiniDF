@@ -105,9 +105,6 @@ public class GameWindow extends JPanel implements Runnable {
                         // criar job de cortar arvore
                         JobManager.addJob(new ChopTreeJob(clickedTile));
                     }
-
-//                    List<Tile> path = pathfinder.findPath(world, world.getTile(dwarf.getX(), dwarf.getY()), clickedTile);
-//                    dwarf.setPath(path.toArray(Tile[]::new));
                 }
             }
         });
