@@ -20,7 +20,10 @@ public abstract class Job {
 
     public void assignDwarf(Dwarf dwarf) {
         this.assignedDwarf = dwarf;
-        state = JobState.ASSIGNED;
+        if (dwarf != null)
+            state = JobState.ASSIGNED;
+        else
+            state = JobState.CANCELED;
     }
 
     // TODO: PROVISORIO - provalmente será removido futuramente

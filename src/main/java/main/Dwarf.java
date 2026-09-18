@@ -97,6 +97,10 @@ public class Dwarf {
         carriedItem = world.removeItem(item);
     }
 
+    public void removeItem() {
+        carriedItem = null;
+    }
+
     public boolean hasItem() {
         return carriedItem != null;
     }

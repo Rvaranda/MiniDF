@@ -2,6 +2,8 @@ package main;
 
 import items.Item;
 import items.ItemType;
+import jobsystem.HaulJob;
+import jobsystem.JobManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -122,7 +124,13 @@ public class World {
     }
 
     public void spawnItem(ItemType type, int x, int y) {
-        items.add(new Item(type, x, y));
+        Item item = new Item(type, x, y);
+        items.add(item);
+        JobManager.addJob(new HaulJob(getTile(x, y), item));
+    }
+
+    public void spawnItem(Item item) {
+        items.add(item);
     }
 
     public Item getItem(int x, int y) {
