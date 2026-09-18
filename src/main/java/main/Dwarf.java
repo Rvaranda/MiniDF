@@ -1,5 +1,6 @@
 package main;
 
+import items.Item;
 import jobsystem.Job;
 import jobsystem.JobManager;
 import pathfinding.Pathfinder;
@@ -9,10 +10,17 @@ import java.util.List;
 public class Dwarf {
     private int x, y;
     private final World world;
-    private Tile[] path;
+
+    // Trabalhos
     private Job assignedJob;
+
+    // Movimento
+    private Tile[] path;
     private int pathIndex;
     private boolean moving;
+
+    // Item
+    private Item carriedItem;
 
     public Dwarf(World world, int x, int y) {
         this.x = x;
@@ -21,6 +29,7 @@ public class Dwarf {
         path = null;
         assignedJob = null;
         this.world = world;
+        carriedItem = null;
     }
 
     private void updatePath() {
@@ -81,6 +90,15 @@ public class Dwarf {
 
         moving = true;
         setPath(path.toArray(Tile[]::new));
+    }
+
+    public void takeItem(Item item) {
+        if (item == null) return;
+        carriedItem = world.removeItem(item);
+    }
+
+    public boolean hasItem() {
+        return carriedItem != null;
     }
 
     public void update() {
