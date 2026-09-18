@@ -89,7 +89,7 @@ public class World {
         return isValidPosition(x, y) ? tiles[y * WORLD_WIDTH + x] : null;
     }
 
-    public Tile[] getNeighbors(int x, int y, boolean ignoreTraversable) {
+    public Tile[] getNeighbors(int x, int y, boolean includeNonTraversable) {
         int[][] directions = {
                 {0, -1}, { 0, 1},
                 {1,  0}, {-1, 0},
@@ -107,7 +107,7 @@ public class World {
             int ny = y + dy;
 
             Tile tile = getTile(nx, ny);
-            if (ignoreTraversable)
+            if (includeNonTraversable)
                 neighbors.add(getTile(nx, ny));
             else if (tile.isTraversable())
                 neighbors.add(getTile(nx, ny));
