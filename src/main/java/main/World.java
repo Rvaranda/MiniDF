@@ -1,5 +1,8 @@
 package main;
 
+import items.Item;
+import items.ItemType;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -11,6 +14,7 @@ public class World {
 
     private Tile[] tiles = new Tile[WORLD_WIDTH * WORLD_HEIGHT];
     private List<Dwarf> dwarves = new ArrayList<>();
+    private List<Item> items = new ArrayList<>();
 
     Random random = new Random();
 
@@ -85,7 +89,7 @@ public class World {
         return isValidPosition(x, y) ? tiles[y * WORLD_WIDTH + x] : null;
     }
 
-    public Tile[] getNeighbors(int x, int y) {
+    public Tile[] getNeighbors(int x, int y, boolean ignoreTraversable) {
         int[][] directions = {
                 {0, -1}, { 0, 1},
                 {1,  0}, {-1, 0},
@@ -102,10 +106,24 @@ public class World {
             int nx = x + dx;
             int ny = y + dy;
 
-            neighbors.add(getTile(nx, ny));
+            Tile tile = getTile(nx, ny);
+            if (ignoreTraversable)
+                neighbors.add(getTile(nx, ny));
+            else if (tile.isTraversable())
+                neighbors.add(getTile(nx, ny));
         }
 
         return neighbors.toArray(Tile[]::new);
+    }
+
+    public Tile[] getNeighbors(int x, int y) {
+        return getNeighbors(x, y, false);
+    }
+
+    public Tile getRandomNeighbor(int x, int y) {
+        Tile[] neighbors = getNeighbors(x, y);
+        if (neighbors.length == 0) return null;
+        return neighbors[random.nextInt(neighbors.length)];
     }
 
     public void spawnTree(int x, int y) {
@@ -116,6 +134,10 @@ public class World {
         for (int i = 0; i < amount; i++) {
             tiles[random.nextInt(tiles.length)].spawnTree();
         }
+    }
+
+    public void spawnItem(ItemType type, int x, int y) {
+        items.add(new Item(type, x, y));
     }
 
     public void spawnDwarf(int x, int y) {
@@ -133,5 +155,9 @@ public class World {
 
     public List<Dwarf> getDwarves() {
         return dwarves;
+    }
+
+    public List<Item> getItems() {
+        return items;
     }
 }

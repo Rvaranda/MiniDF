@@ -1,5 +1,6 @@
 package jobsystem;
 
+import items.ItemType;
 import main.Dwarf;
 import main.Tile;
 import main.World;
@@ -25,7 +26,7 @@ public class ChopTreeJob extends Job {
         Tile[] neighbors = dwarf.getWorld().getNeighbors(targetX, targetY);
         Tile[] shortestPath = null;
         for (Tile neighbor : neighbors) {
-            if (!neighbor.isTraversable()) continue;
+            //if (!neighbor.isTraversable()) continue;
             Tile[] path = Pathfinder.findPath(
                     dwarf.getWorld(),
                     dwarf.getWorld().getTile(dwarfX, dwarfY),
@@ -64,6 +65,8 @@ public class ChopTreeJob extends Job {
     @Override
     public void onComplete(World world) {
         getTarget().chopTree();
+        Tile tile = world.getRandomNeighbor(getTarget().getX(), getTarget().getY());
+        world.spawnItem(ItemType.WOOD, tile.getX(), tile.getY());
     }
 
     @Override
