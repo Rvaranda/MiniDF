@@ -125,6 +125,14 @@ public class World {
         items.add(new Item(type, x, y));
     }
 
+    public Item getItem(int x, int y) {
+        return items.stream().filter(i -> i.getX() == x && i.getY() == y).findFirst().orElse(null);
+    }
+
+    public Item removeItem(Item item) {
+        return items.remove(item) ? item : null;
+    }
+
     public void spawnDwarf(int x, int y) {
         int spawnX = x;
         int spawnY = y;
