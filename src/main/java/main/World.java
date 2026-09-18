@@ -41,7 +41,7 @@ public class World {
             tiles[i] = new Tile(x, y, TileType.GRASS);
         }
 
-        spawnTrees(100);
+        //spawnTrees(100);
         spawnDwarf(3, 3);
     }
 
@@ -94,6 +94,8 @@ public class World {
             int ny = y + dy;
 
             Tile tile = getTile(nx, ny);
+            if (tile == null) continue;
+
             if (includeNonTraversable)
                 neighbors.add(getTile(nx, ny));
             else if (tile.isTraversable())
