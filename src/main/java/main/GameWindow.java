@@ -45,6 +45,15 @@ public class GameWindow extends JPanel implements Runnable {
     // Mouse
     private int mouseX, mouseY;
 
+    // ---------------- TESTE ---------------------
+    private enum TestState {
+        DEFAULT,
+        MOVE_DWARF,
+        SPAWN_TREE
+    }
+    private TestState currentState = TestState.DEFAULT;
+    // --------------------------------------------
+
     public GameWindow() {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setDoubleBuffered(true);
@@ -65,6 +74,12 @@ public class GameWindow extends JPanel implements Runnable {
                             JobManager.addJob(new ChopTreeJob(world.getTile(pos[0], pos[1])));
                         }
                     }
+                    case KeyEvent.VK_Q -> {
+                        if (currentState == TestState.DEFAULT) currentState = TestState.MOVE_DWARF;
+                        else if (currentState == TestState.MOVE_DWARF) currentState = TestState.SPAWN_TREE;
+                        else if (currentState == TestState.SPAWN_TREE) currentState = TestState.DEFAULT;
+                        System.out.println("Current state: " + currentState.name());
+                    }
                 }
             }
 
@@ -84,30 +99,66 @@ public class GameWindow extends JPanel implements Runnable {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                mouseX = e.getX();
-                mouseY = e.getY();
-
-                int worldX = mouseX + (int) camera.getX();
-                int worldY = mouseY + (int) camera.getY();
-
-                int tileX = worldX / World.TILE_SIZE;
-                int tileY = worldY / World.TILE_SIZE;
-
-                Tile clickedTile = world.getTile(tileX, tileY);
-
-                if (clickedTile != null) {
-                    System.out.println("WorldX: " + worldX + "\tWorldY: " + worldY);
-                    System.out.println("TileX: " + tileX + "\tTileY: " + tileY);
-                    System.out.println("X: " + clickedTile.getX() + "\tY: " + clickedTile.getY());
-                    System.out.println("Tree: " + clickedTile.hasTree());
-
-                    if (clickedTile.hasTree()) {
-                        // criar job de cortar arvore
-                        JobManager.addJob(new ChopTreeJob(clickedTile));
-                    }
+                switch (currentState) {
+                    case DEFAULT -> defaultState(e);
+                    case MOVE_DWARF -> moveDwarf(e);
+                    case SPAWN_TREE -> spawnTree(e);
                 }
             }
         });
+    }
+
+    private void defaultState(MouseEvent e) {
+        mouseX = e.getX();
+        mouseY = e.getY();
+
+        int worldX = mouseX + (int) camera.getX();
+        int worldY = mouseY + (int) camera.getY();
+
+        int tileX = worldX / World.TILE_SIZE;
+        int tileY = worldY / World.TILE_SIZE;
+
+        Tile clickedTile = world.getTile(tileX, tileY);
+
+        if (clickedTile != null) {
+            System.out.println("WorldX: " + worldX + "\tWorldY: " + worldY);
+            System.out.println("TileX: " + tileX + "\tTileY: " + tileY);
+            System.out.println("X: " + clickedTile.getX() + "\tY: " + clickedTile.getY());
+            System.out.println("Tree: " + clickedTile.hasTree());
+
+            if (clickedTile.hasTree()) {
+                // criar job de cortar arvore
+                JobManager.addJob(new ChopTreeJob(clickedTile));
+            }
+        }
+    }
+    private void moveDwarf(MouseEvent e) {
+        mouseX = e.getX();
+        mouseY = e.getY();
+
+        int worldX = mouseX + (int) camera.getX();
+        int worldY = mouseY + (int) camera.getY();
+
+        int tileX = worldX / World.TILE_SIZE;
+        int tileY = worldY / World.TILE_SIZE;
+
+        Tile clickedTile = world.getTile(tileX, tileY);
+
+        if (clickedTile != null) {
+            world.getDwarves().getFirst().moveTo(clickedTile);
+        }
+    }
+    private void spawnTree(MouseEvent e) {
+        mouseX = e.getX();
+        mouseY = e.getY();
+
+        int worldX = mouseX + (int) camera.getX();
+        int worldY = mouseY + (int) camera.getY();
+
+        int tileX = worldX / World.TILE_SIZE;
+        int tileY = worldY / World.TILE_SIZE;
+
+        world.spawnTree(tileX, tileY);
     }
 
     public void start() {
