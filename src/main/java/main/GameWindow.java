@@ -99,10 +99,25 @@ public class GameWindow extends JPanel implements Runnable {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                switch (currentState) {
-                    case DEFAULT -> defaultState(e);
-                    case MOVE_DWARF -> moveDwarf(e);
-                    case SPAWN_TREE -> spawnTree(e);
+
+                if (SwingUtilities.isLeftMouseButton(e)) {
+                    switch (currentState) {
+                        case DEFAULT -> defaultState(e);
+                        case MOVE_DWARF -> moveDwarf(e);
+                        case SPAWN_TREE -> spawnTree(e);
+                    }
+                }
+                else if (SwingUtilities.isRightMouseButton(e)) {
+                    mouseX = e.getX();
+                    mouseY = e.getY();
+
+                    int worldX = mouseX + (int) camera.getX();
+                    int worldY = mouseY + (int) camera.getY();
+
+                    int tileX = worldX / World.TILE_SIZE;
+                    int tileY = worldY / World.TILE_SIZE;
+
+                    world.getTile(tileX, tileY).createStockpile();
                 }
             }
         });

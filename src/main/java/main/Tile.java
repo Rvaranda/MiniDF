@@ -25,6 +25,10 @@ public class Tile {
         return hasTree;
     }
 
+    public void createStockpile() {
+        type = TileType.STOCKPILE;
+    }
+
     public TileType getType() {
         return type;
     }
