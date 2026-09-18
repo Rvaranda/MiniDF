@@ -2,7 +2,7 @@ package main;
 
 import jobsystem.ChopTreeJob;
 import jobsystem.JobManager;
-import pathfinding.Pathfinder;
+
 import renderer.DwarfRenderer;
 import renderer.TileRenderer;
 import renderer.Camera;
@@ -17,7 +17,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.List;
 
 public class GameWindow extends JPanel implements Runnable {
     Thread thread;
@@ -28,7 +27,6 @@ public class GameWindow extends JPanel implements Runnable {
     public static final int FPS = 60;
 
     private final World world = new World();
-    private final Dwarf dwarf;
 
     // Renderers
     private final TileRenderer tileRenderer = new TileRenderer();
@@ -106,8 +104,6 @@ public class GameWindow extends JPanel implements Runnable {
                 }
             }
         });
-
-        dwarf = world.getDwarves().getFirst();
     }
 
     public void start() {
@@ -128,7 +124,7 @@ public class GameWindow extends JPanel implements Runnable {
     }
 
     void update(double delta) {
-        dwarf.update();
+        world.getDwarves().forEach(Dwarf::update);
     }
 
     @Override
