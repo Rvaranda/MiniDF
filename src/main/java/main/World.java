@@ -122,7 +122,7 @@ public class World {
 
     public Tile getRandomNeighbor(int x, int y) {
         Tile[] neighbors = getNeighbors(x, y);
-        if (neighbors.length == 0) return null;
+        if (neighbors.length == 0) return getTile(x, y);
         return neighbors[random.nextInt(neighbors.length)];
     }
 
