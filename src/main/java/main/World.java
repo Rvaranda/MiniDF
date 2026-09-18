@@ -14,6 +14,20 @@ public class World {
 
     Random random = new Random();
 
+    // TESTE - apagar depois
+    public int[][] pos = {
+            {15, 15}, {16, 16}, {17, 17},
+            {18, 18}, {19, 19}, {20, 20},
+            {21, 21}, {22, 22}, {23, 23},
+            {24, 24}, {25, 25}, {26, 26},
+            {30, 10}, {30, 12}, {30, 14},
+            {36, 10}, {36, 12}, {36, 14},
+            {40, 23}, {40, 25}, {40, 27},
+            {50, 50}, {51, 51}, {52, 52},
+            {53, 53}, {54, 54}, {55, 55},
+            {56, 56}, {57, 57}, {58, 58},
+    };
+
     public World() {
         for (int i = 0; i < tiles.length; i++) {
             int x = i % WORLD_WIDTH;
@@ -22,6 +36,9 @@ public class World {
         }
 
         //spawnTrees(100);
+        for (int[] p : pos) {
+            spawnTree(p[0], p[1]);
+        }
         /*spawnTree(10,30);
         spawnTree(10,29);
         spawnTree(10,31);
@@ -29,7 +46,7 @@ public class World {
         spawnTree(9,29);
         spawnTree(11,31);
         spawnTree(11,29);
-        spawnTree(9,31);*/
+        spawnTree(9,31);
 
         spawnTree(30,10);
         spawnTree(31,10);
@@ -41,9 +58,18 @@ public class World {
         spawnTree(29,11);
         spawnTree(31,9);
 
-        spawnTree(40, 40);
+        spawnTree(40, 40);*/
 
-        spawnDwarf(10, 10);
+        spawnDwarf(2, 2);
+        spawnDwarf(2, 4);
+        spawnDwarf(2, 6);
+        spawnDwarf(2, 8);
+        spawnDwarf(2, 10);
+        spawnDwarf(2, 12);
+        spawnDwarf(2, 14);
+        spawnDwarf(2, 16);
+        spawnDwarf(2, 18);
+        spawnDwarf(2, 20);
     }
 
     public boolean isValidPosition(int x, int y) {
