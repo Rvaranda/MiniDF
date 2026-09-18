@@ -18,8 +18,8 @@ public class World {
 
     Random random = new Random();
 
-    // TESTE - apagar depois
-    public int[][] pos = {
+    // TODO: TESTE - apagar depois
+    public int[][] treesPos = {
             {15, 15}, {16, 16}, {17, 17},
             {18, 18}, {19, 19}, {20, 20},
             {21, 21}, {22, 22}, {23, 23},
@@ -39,30 +39,15 @@ public class World {
             tiles[i] = new Tile(x, y, TileType.GRASS);
         }
 
-        //spawnTrees(100);
-        for (int[] p : pos) {
+        spawnTrees(100);
+        spawnDwarf(3, 3);
+    }
+
+    // TODO: TESTE - apagar depois
+    private void testes() {
+        for (int[] p : treesPos) {
             spawnTree(p[0], p[1]);
         }
-        /*spawnTree(10,30);
-        spawnTree(10,29);
-        spawnTree(10,31);
-        spawnTree(9,30);
-        spawnTree(9,29);
-        spawnTree(11,31);
-        spawnTree(11,29);
-        spawnTree(9,31);
-
-        spawnTree(30,10);
-        spawnTree(31,10);
-        spawnTree(29,10);
-        spawnTree(30,9);
-        spawnTree(30,11);
-        spawnTree(29,9);
-        spawnTree(31,11);
-        spawnTree(29,11);
-        spawnTree(31,9);
-
-        spawnTree(40, 40);*/
 
         spawnDwarf(2, 2);
         spawnDwarf(2, 4);
