@@ -29,6 +29,9 @@ public class HaulJob extends Job {
         this.item = item;
     }
 
+    public int getDestinationX() { return destinationX; }
+    public int getDestinationY() { return destinationY; }
+
     @Override
     public void assignDwarf(Dwarf dwarf) {
         super.assignDwarf(dwarf);

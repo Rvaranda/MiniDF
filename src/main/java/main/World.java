@@ -6,6 +6,7 @@ import jobsystem.HaulJob;
 import jobsystem.JobManager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -20,20 +21,6 @@ public class World {
 
     Random random = new Random();
 
-    // TODO: TESTE - apagar depois
-    public int[][] treesPos = {
-            {15, 15}, {16, 16}, {17, 17},
-            {18, 18}, {19, 19}, {20, 20},
-            {21, 21}, {22, 22}, {23, 23},
-            {24, 24}, {25, 25}, {26, 26},
-            {30, 10}, {30, 12}, {30, 14},
-            {36, 10}, {36, 12}, {36, 14},
-            {40, 23}, {40, 25}, {40, 27},
-            {50, 50}, {51, 51}, {52, 52},
-            {53, 53}, {54, 54}, {55, 55},
-            {56, 56}, {57, 57}, {58, 58},
-    };
-
     public World() {
         for (int i = 0; i < tiles.length; i++) {
             int x = i % WORLD_WIDTH;
@@ -42,11 +29,28 @@ public class World {
         }
 
         //spawnTrees(100);
-        spawnDwarf(3, 3);
+        //spawnDwarf(3, 3);
+        //testes();
+        spawnDwarf(2, 2);
+        spawnDwarf(2, 4);
+        createStockpileArea(44, 3, 53, 5);
     }
 
     // TODO: TESTE - apagar depois
     private void testes() {
+        int[][] treesPos = {
+                {15, 15}, {16, 16}, {17, 17},
+                {18, 18}, {19, 19}, {20, 20},
+                {21, 21}, {22, 22}, {23, 23},
+                {24, 24}, {25, 25}, {26, 26},
+                {30, 10}, {30, 12}, {30, 14},
+                {36, 10}, {36, 12}, {36, 14},
+                {40, 23}, {40, 25}, {40, 27},
+                {50, 50}, {51, 51}, {52, 52},
+                {53, 53}, {54, 54}, {55, 55},
+                {56, 56}, {57, 57}, {58, 58},
+        };
+
         for (int[] p : treesPos) {
             spawnTree(p[0], p[1]);
         }
@@ -61,6 +65,15 @@ public class World {
         spawnDwarf(2, 16);
         spawnDwarf(2, 18);
         spawnDwarf(2, 20);
+    }
+
+    private void createStockpileArea(int x1, int y1, int x2, int y2) {
+        for (int i = x1; i <= x2; i++) {
+            for (int j = y1; j <= y2; j++) {
+                Tile tile = getTile(i, j);
+                if (tile != null) tile.createStockpile();
+            }
+        }
     }
 
     public boolean isValidPosition(int x, int y) {
@@ -115,6 +128,23 @@ public class World {
         return neighbors[random.nextInt(neighbors.length)];
     }
 
+    public Tile getFreeStockpileTile() {
+        List<Tile> stockpileTiles = Arrays.stream(tiles).filter(t -> t.getType() == TileType.STOCKPILE).toList();
+        List<Tile> freeStockpileTiles = stockpileTiles.stream()
+                .filter(t -> {
+                    Item item = items.stream().filter(i -> i.getX() == t.getX() && i.getY() == t.getY())
+                            .findFirst().orElse(null);
+                    return item == null;
+                }).toList();
+        return freeStockpileTiles.stream()
+                .filter(t -> !JobManager.isPositionAssignedToHaul(t.getX(), t.getY()))
+                .findFirst().orElse(null);
+    }
+
+    public Tile[] getAllTrees() {
+        return Arrays.stream(tiles).filter(Tile::hasTree).toArray(Tile[]::new);
+    }
+
     public void spawnTree(int x, int y) {
         getTile(x, y).spawnTree();
     }
@@ -128,7 +158,9 @@ public class World {
     public void spawnItem(ItemType type, int x, int y) {
         Item item = new Item(type, x, y);
         items.add(item);
-        JobManager.addJob(new HaulJob(getTile(x, y), item));
+        Tile destination = getFreeStockpileTile();
+        if (destination != null)
+            JobManager.addJob(new HaulJob(getTile(x, y), destination, item));
     }
 
     public void spawnItem(Item item) {

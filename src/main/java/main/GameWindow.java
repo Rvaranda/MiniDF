@@ -70,8 +70,8 @@ public class GameWindow extends JPanel implements Runnable {
                     case KeyEvent.VK_A -> leftPressed = true;
                     case KeyEvent.VK_D -> rightPressed = true;
                     case KeyEvent.VK_R -> {
-                        for (int[] pos : world.treesPos) {
-                            JobManager.addJob(new ChopTreeJob(world.getTile(pos[0], pos[1])));
+                        for (Tile treeTile : world.getAllTrees()) {
+                            JobManager.addJob(new ChopTreeJob(treeTile));
                         }
                     }
                     case KeyEvent.VK_Q -> {

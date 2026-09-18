@@ -22,4 +22,10 @@ public class JobManager {
         jobs.remove(job);
         return job;
     }
+
+    public static boolean isPositionAssignedToHaul(int x, int y) {
+        return jobs.stream()
+                .filter(j -> j instanceof HaulJob)
+                .anyMatch(j -> ((HaulJob) j).getDestinationX() == x && ((HaulJob) j).getDestinationY() == y);
+    }
 }
