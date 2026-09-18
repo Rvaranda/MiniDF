@@ -4,6 +4,7 @@ import jobsystem.ChopTreeJob;
 import jobsystem.JobManager;
 
 import renderer.DwarfRenderer;
+import renderer.ItemRenderer;
 import renderer.TileRenderer;
 import renderer.Camera;
 
@@ -31,6 +32,7 @@ public class GameWindow extends JPanel implements Runnable {
     // Renderers
     private final TileRenderer tileRenderer = new TileRenderer();
     private final DwarfRenderer dwarfRenderer = new DwarfRenderer();
+    private final ItemRenderer itemRenderer = new ItemRenderer();
     private final Camera camera = new Camera();
 
     // Camera
@@ -142,6 +144,7 @@ public class GameWindow extends JPanel implements Runnable {
             tileRenderer.render(t, camera, g2d);
         }
 
+        world.getItems().forEach(i -> itemRenderer.render(i, camera, g2d));
         world.getDwarves().forEach(d -> dwarfRenderer.render(d, camera, g2d));
     }
 
