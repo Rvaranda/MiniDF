@@ -57,8 +57,7 @@ public class Dwarf {
             assignedJob.execute(world);
         }
         else {
-            // TODO: Isso vai remover o job da fila, deletando-o, mesmo se ele nao for executado. Consertar depois
-            Job job = JobManager.pollFirstAvailableJob();
+            Job job = JobManager.getFirstAvailableJob();
             assignJob(job);
         }
     }

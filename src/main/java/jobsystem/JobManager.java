@@ -14,12 +14,11 @@ public class JobManager {
         return jobs.stream().filter(Job::isAvailable).toList();
     }
 
-    public static Job pollFirstAvailableJob() {
+    public static Job getFirstAvailableJob() {
         List<Job> availableJobs = getAvailableJobs();
         if (availableJobs.isEmpty()) return null;
 
         Job job = availableJobs.getFirst();
-        jobs.remove(job);
         return job;
     }
 
