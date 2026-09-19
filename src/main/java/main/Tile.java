@@ -14,7 +14,8 @@ public class Tile {
     }
 
     public void spawnTree() {
-        hasTree = true;
+        if (type != TileType.WALL)
+            hasTree = true;
     }
 
     public void chopTree() {

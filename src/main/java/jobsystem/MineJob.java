@@ -3,6 +3,7 @@ package jobsystem;
 import items.ItemType;
 import main.Dwarf;
 import main.Tile;
+import main.TileType;
 import main.World;
 import pathfinding.Pathfinder;
 
@@ -67,6 +68,12 @@ public class MineJob extends Job {
     @Override
     public void execute(World world) {
         if (getAssignedDwarf().isMoving()) return;
+
+        if (getTarget().getType() != TileType.WALL) {
+            getAssignedDwarf().clearJob();
+            assignDwarf(null);
+            return;
+        }
 
         if (progress > 0) {
             progress--;

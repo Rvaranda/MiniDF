@@ -1,6 +1,7 @@
 package jobsystem;
 
 import items.Item;
+import main.Tile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,12 @@ public class JobManager {
         return jobs.stream()
                 .filter(j -> j instanceof HaulJob)
                 .anyMatch(j -> ((HaulJob) j).getDestinationX() == x && ((HaulJob) j).getDestinationY() == y);
+    }
+
+    public static boolean hasJobFor(Tile tile) {
+        return jobs.stream()
+                .filter(j -> j.isAvailable() || j.isAssigned())
+                .anyMatch(j -> j.getTarget() == tile);
     }
 
     public static boolean hasHaulJobFor(Item item) {

@@ -73,6 +73,12 @@ public class ChopTreeJob extends Job {
     public void execute(World world) {
         if (getAssignedDwarf().isMoving()) return;
 
+        if (!getTarget().hasTree()) {
+            getAssignedDwarf().clearJob();
+            assignDwarf(null);
+            return;
+        }
+
         if (progress > 0) {
             progress--;
             return;

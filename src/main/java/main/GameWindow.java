@@ -140,16 +140,18 @@ public class GameWindow extends JPanel implements Runnable {
         Tile clickedTile = world.getTile(tileX, tileY);
 
         if (clickedTile != null) {
-            System.out.println("WorldX: " + worldX + "\tWorldY: " + worldY);
-            System.out.println("TileX: " + tileX + "\tTileY: " + tileY);
             System.out.println("X: " + clickedTile.getX() + "\tY: " + clickedTile.getY());
+            System.out.println("Type: " + clickedTile.getType().name());
             System.out.println("Tree: " + clickedTile.hasTree());
+            System.out.println("----------------------------------");
 
-            if (clickedTile.getType() == TileType.WALL)
-                JobManager.addJob(new MineJob(clickedTile));
-            else if (clickedTile.hasTree()) {
-                // criar job de cortar arvore
-                JobManager.addJob(new ChopTreeJob(clickedTile));
+            if (!JobManager.hasJobFor(clickedTile)) {
+                if (clickedTile.getType() == TileType.WALL)
+                    JobManager.addJob(new MineJob(clickedTile));
+                else if (clickedTile.hasTree()) {
+                    // criar job de cortar arvore
+                    JobManager.addJob(new ChopTreeJob(clickedTile));
+                }
             }
         }
     }
