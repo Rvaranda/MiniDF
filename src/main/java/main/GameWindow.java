@@ -45,6 +45,9 @@ public class GameWindow extends JPanel implements Runnable {
     // Mouse
     private int mouseX, mouseY;
 
+    private int scateredItemsCheckTimer = 20;
+    private int scateredItemsCheckCounter = 0;
+
     // ---------------- TESTE ---------------------
     private enum TestState {
         DEFAULT,
@@ -194,7 +197,12 @@ public class GameWindow extends JPanel implements Runnable {
     }
 
     void update(double delta) {
+        scateredItemsCheckCounter++;
         world.getDwarves().forEach(Dwarf::update);
+        if (scateredItemsCheckCounter > scateredItemsCheckTimer) {
+            scateredItemsCheckCounter = 0;
+            world.checkScateredItems();
+        }
     }
 
     @Override

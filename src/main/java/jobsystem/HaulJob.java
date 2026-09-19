@@ -31,6 +31,7 @@ public class HaulJob extends Job {
 
     public int getDestinationX() { return destinationX; }
     public int getDestinationY() { return destinationY; }
+    public Item getItem() { return item; }
 
     @Override
     public void assignDwarf(Dwarf dwarf) {

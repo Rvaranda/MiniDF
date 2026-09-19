@@ -33,7 +33,7 @@ public class World {
         //testes();
         spawnDwarf(2, 2);
         spawnDwarf(2, 4);
-        createStockpileArea(44, 3, 53, 5);
+        //createStockpileArea(44, 3, 53, 5);
     }
 
     // TODO: TESTE - apagar depois
@@ -158,9 +158,6 @@ public class World {
     public void spawnItem(ItemType type, int x, int y) {
         Item item = new Item(type, x, y);
         items.add(item);
-        Tile destination = getFreeStockpileTile();
-        if (destination != null)
-            JobManager.addJob(new HaulJob(getTile(x, y), destination, item));
     }
 
     public void spawnItem(Item item) {
@@ -186,6 +183,23 @@ public class World {
         }
 
         dwarves.add(new Dwarf(this, spawnX, spawnY));
+    }
+
+    public void checkScateredItems() {
+        for (Item item : items) {
+            if (JobManager.hasHaulJobFor(item)) continue;
+
+            Tile itemTile = getTile(item.getX(), item.getY());
+            Tile destination = getFreeStockpileTile();
+            if (destination != null && itemTile.getType() != TileType.STOCKPILE)
+                JobManager.addJob(
+                        new HaulJob(
+                                itemTile,
+                                destination,
+                                item
+                        )
+                );
+        }
     }
 
     public List<Dwarf> getDwarves() {
