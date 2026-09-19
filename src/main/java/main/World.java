@@ -31,8 +31,11 @@ public class World {
         //spawnTrees(100);
         //spawnDwarf(3, 3);
         //testes();
+        placeWall(30, 30, 40, 40);
+        placeWall(60, 30, 70, 40);
+        spawnTrees(100);
         spawnDwarf(2, 2);
-        spawnDwarf(2, 4);
+        //spawnDwarf(2, 4);
         //createStockpileArea(44, 3, 53, 5);
     }
 
@@ -71,7 +74,8 @@ public class World {
         for (int i = x1; i <= x2; i++) {
             for (int j = y1; j <= y2; j++) {
                 Tile tile = getTile(i, j);
-                if (tile != null) tile.createStockpile();
+                if (tile != null && tile.getType() != TileType.WALL)
+                    tile.createStockpile();
             }
         }
     }
@@ -146,7 +150,9 @@ public class World {
     }
 
     public void spawnTree(int x, int y) {
-        getTile(x, y).spawnTree();
+        Tile tile = getTile(x, y);
+        if (tile != null && tile.getType() != TileType.WALL)
+            tile.spawnTree();
     }
 
     public void spawnTrees(int amount) {
@@ -170,6 +176,20 @@ public class World {
 
     public Item removeItem(Item item) {
         return items.remove(item) ? item : null;
+    }
+
+    public void placeWall(int x, int y) {
+        Tile tile = getTile(x, y);
+        if (tile != null && !tile.hasTree())
+            tile.placeWall();
+    }
+
+    public void placeWall(int x1, int y1, int x2, int y2) {
+        for (int i = x1; i <= x2; i++) {
+            for (int j = y1; j <= y2; j++) {
+                placeWall(i, j);
+            }
+        }
     }
 
     public void spawnDwarf(int x, int y) {

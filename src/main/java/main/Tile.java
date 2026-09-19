@@ -21,12 +21,22 @@ public class Tile {
         hasTree = false;
     }
 
+    public void mine() {
+        if (type == TileType.WALL)
+            type = TileType.GRASS;
+    }
+
     public boolean hasTree() {
         return hasTree;
     }
 
     public void createStockpile() {
         type = TileType.STOCKPILE;
+    }
+
+    public void placeWall() {
+        type = TileType.WALL;
+        hasTree = false;
     }
 
     public TileType getType() {
@@ -37,6 +47,6 @@ public class Tile {
     public int getY() { return y; }
 
     public boolean isTraversable() {
-        return !hasTree;
+        return !hasTree && type != TileType.WALL;
     }
 }

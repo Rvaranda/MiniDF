@@ -16,6 +16,7 @@ public class TileRenderer {
 
     private final Color treeColor = new Color(80, 48, 26);
     private final Color stockpileColor = new Color(99, 99, 99);
+    private final Color wallColor = new Color(182, 97, 50);
 
     private int getVariant(Tile tile, int variantCount) {
         int hash = tile.getX() * 73856093 ^ tile.getY() * 19349663;
@@ -33,6 +34,7 @@ public class TileRenderer {
         switch (tile.getType()) {
             case GRASS -> color = grassColors[getVariant(tile, grassColors.length)];
             case STOCKPILE -> color = stockpileColor;
+            case WALL -> color = wallColor;
         }
 
         color = tile.hasTree() ? treeColor : color;

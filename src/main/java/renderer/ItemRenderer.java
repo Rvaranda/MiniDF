@@ -13,6 +13,7 @@ public class ItemRenderer {
 
     public ItemRenderer() {
         itemsColor.put(ItemType.WOOD, new Color(238, 6, 246));
+        itemsColor.put(ItemType.STONE, new Color(21, 230, 203));
     }
 
     public void render(Item item, Camera camera, Graphics2D g) {

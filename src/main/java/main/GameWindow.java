@@ -3,6 +3,7 @@ package main;
 import jobsystem.ChopTreeJob;
 import jobsystem.JobManager;
 
+import jobsystem.MineJob;
 import renderer.DwarfRenderer;
 import renderer.ItemRenderer;
 import renderer.TileRenderer;
@@ -144,7 +145,9 @@ public class GameWindow extends JPanel implements Runnable {
             System.out.println("X: " + clickedTile.getX() + "\tY: " + clickedTile.getY());
             System.out.println("Tree: " + clickedTile.hasTree());
 
-            if (clickedTile.hasTree()) {
+            if (clickedTile.getType() == TileType.WALL)
+                JobManager.addJob(new MineJob(clickedTile));
+            else if (clickedTile.hasTree()) {
                 // criar job de cortar arvore
                 JobManager.addJob(new ChopTreeJob(clickedTile));
             }
