@@ -1,9 +1,8 @@
 package main;
 
-import jobsystem.ChopTreeJob;
+import jobsystem.CarveTileJob;
 import jobsystem.JobManager;
 
-import jobsystem.MineJob;
 import renderer.DwarfRenderer;
 import renderer.ItemRenderer;
 import renderer.TileRenderer;
@@ -75,7 +74,7 @@ public class GameWindow extends JPanel implements Runnable {
                     case KeyEvent.VK_D -> rightPressed = true;
                     case KeyEvent.VK_R -> {
                         for (Tile treeTile : world.getAllTrees()) {
-                            JobManager.addJob(new ChopTreeJob(treeTile));
+                            JobManager.addJob(new CarveTileJob(treeTile));
                         }
                     }
                     case KeyEvent.VK_Q -> {
@@ -145,13 +144,8 @@ public class GameWindow extends JPanel implements Runnable {
             System.out.println("Tree: " + clickedTile.hasTree());
             System.out.println("----------------------------------");
 
-            if (!JobManager.hasJobFor(clickedTile)) {
-                if (clickedTile.getType() == TileType.WALL)
-                    JobManager.addJob(new MineJob(clickedTile));
-                else if (clickedTile.hasTree()) {
-                    // criar job de cortar arvore
-                    JobManager.addJob(new ChopTreeJob(clickedTile));
-                }
+            if (!JobManager.hasJobFor(clickedTile) && !clickedTile.isTraversable()) {
+                JobManager.addJob(new CarveTileJob(clickedTile));
             }
         }
     }
