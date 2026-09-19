@@ -55,4 +55,8 @@ public class Tile {
     public boolean isTraversable() {
         return !hasTree && type != TileType.WALL && type != TileType.BUILT_WALL;
     }
+
+    public boolean isCarveable() {
+        return hasTree || type == TileType.WALL;
+    }
 }

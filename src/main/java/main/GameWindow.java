@@ -147,7 +147,7 @@ public class GameWindow extends JPanel implements Runnable {
             System.out.println("Tree: " + clickedTile.hasTree());
             System.out.println("----------------------------------");
 
-            if (!JobManager.hasJobFor(clickedTile) && !clickedTile.isTraversable()) {
+            if (!JobManager.hasJobFor(clickedTile) && clickedTile.isCarveable()) {
                 JobManager.addJob(new CarveTileJob(clickedTile));
             }
         }
