@@ -6,9 +6,14 @@ import main.Tile;
 import main.World;
 import pathfinding.Pathfinder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class HaulJob extends Job {
     private int destinationX, destinationY;
     private Item item;
+
+    private List<JobObserver> observers = new ArrayList<>();
 
     private Tile[] pathFromItemToDest = null;
 
@@ -32,6 +37,9 @@ public class HaulJob extends Job {
     public int getDestinationX() { return destinationX; }
     public int getDestinationY() { return destinationY; }
     public Item getItem() { return item; }
+    public void addJobObserver(JobObserver job) {
+        observers.add(job);
+    }
 
     @Override
     public void assignDwarf(Dwarf dwarf) {
@@ -53,6 +61,7 @@ public class HaulJob extends Job {
         item.setX(destinationX);
         item.setY(destinationY);
         world.spawnItem(item);
+        observers.forEach(JobObserver::notifyObserver);
     }
 
     @Override

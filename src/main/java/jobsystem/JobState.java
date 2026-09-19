@@ -4,5 +4,6 @@ public enum JobState {
     AVAILABLE,
     ASSIGNED,
     DONE,
-    CANCELED
+    CANCELED,
+    WAITING
 }

@@ -1,5 +1,6 @@
 package main;
 
+import jobsystem.BuildJob;
 import jobsystem.CarveTileJob;
 import jobsystem.JobManager;
 
@@ -52,7 +53,8 @@ public class GameWindow extends JPanel implements Runnable {
     private enum TestState {
         DEFAULT,
         MOVE_DWARF,
-        SPAWN_TREE
+        SPAWN_TREE,
+        BUILD_WALL
     }
     private TestState currentState = TestState.DEFAULT;
     // --------------------------------------------
@@ -78,9 +80,9 @@ public class GameWindow extends JPanel implements Runnable {
                         }
                     }
                     case KeyEvent.VK_Q -> {
-                        if (currentState == TestState.DEFAULT) currentState = TestState.MOVE_DWARF;
-                        else if (currentState == TestState.MOVE_DWARF) currentState = TestState.SPAWN_TREE;
-                        else if (currentState == TestState.SPAWN_TREE) currentState = TestState.DEFAULT;
+                        int index = currentState.ordinal() + 1;
+                        index = index >= TestState.values().length ? 0 : index;
+                        currentState = TestState.values()[index];
                         System.out.println("Current state: " + currentState.name());
                     }
                 }
@@ -108,6 +110,7 @@ public class GameWindow extends JPanel implements Runnable {
                         case DEFAULT -> defaultState(e);
                         case MOVE_DWARF -> moveDwarf(e);
                         case SPAWN_TREE -> spawnTree(e);
+                        case BUILD_WALL -> buildWall(e);
                     }
                 }
                 else if (SwingUtilities.isRightMouseButton(e)) {
@@ -176,6 +179,19 @@ public class GameWindow extends JPanel implements Runnable {
         int tileY = worldY / World.TILE_SIZE;
 
         world.spawnTree(tileX, tileY);
+    }
+
+    private void buildWall(MouseEvent e) {
+        mouseX = e.getX();
+        mouseY = e.getY();
+
+        int worldX = mouseX + (int) camera.getX();
+        int worldY = mouseY + (int) camera.getY();
+
+        int tileX = worldX / World.TILE_SIZE;
+        int tileY = worldY / World.TILE_SIZE;
+
+        JobManager.addJob(new BuildJob(world.getTile(tileX, tileY), world));
     }
 
     public void start() {

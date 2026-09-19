@@ -40,6 +40,11 @@ public class Tile {
         hasTree = false;
     }
 
+    public void buildWall() {
+        type = TileType.BUILT_WALL;
+        hasTree = false;
+    }
+
     public TileType getType() {
         return type;
     }
@@ -48,6 +53,6 @@ public class Tile {
     public int getY() { return y; }
 
     public boolean isTraversable() {
-        return !hasTree && type != TileType.WALL;
+        return !hasTree && type != TileType.WALL && type != TileType.BUILT_WALL;
     }
 }
