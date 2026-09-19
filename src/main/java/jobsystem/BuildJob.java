@@ -20,7 +20,7 @@ public class BuildJob extends Job implements JobObserver {
     public BuildJob(Tile target, World world) {
         super(target);
         changeState(JobState.WAITING);
-        Item[] stoneItemsInStockpile = world.getItems().stream()
+        Item[] stoneItemsInStockpile = world.getAvailableItems().stream()
                 .filter(i -> {
                     Tile tile = world.getTile(i.getX(), i.getY());
                     return i.getType() == ItemType.STONE
@@ -29,6 +29,7 @@ public class BuildJob extends Job implements JobObserver {
         // TODO: se nao tiver pedra disponivel, fazer o job procurar periodicamente
         if (stoneItemsInStockpile.length > 0) {
             item = stoneItemsInStockpile[0];
+            world.reserveItem(item);
             haulJob = new HaulJob(
                     world.getTile(item.getX(), item.getY()),
                     target,
@@ -61,6 +62,21 @@ public class BuildJob extends Job implements JobObserver {
         }
 
         return shortestPath;
+    }
+
+    public Item getItem() {
+        return item;
+    }
+
+    @Override
+    public void assignDwarf(Dwarf dwarf) {
+        super.assignDwarf(dwarf);
+        if (bestPathToThisJob != null) {
+            dwarf.setPath(bestPathToThisJob);
+        }
+        else {
+            dwarf.setPath(findPathNextToTarget(dwarf));
+        }
     }
 
     @Override

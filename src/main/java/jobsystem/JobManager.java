@@ -28,6 +28,7 @@ public class JobManager {
     public static boolean isPositionAssignedToHaul(int x, int y) {
         return jobs.stream()
                 .filter(j -> j instanceof HaulJob)
+                .filter(j -> j.isAvailable() || j.isAssigned())
                 .anyMatch(j -> ((HaulJob) j).getDestinationX() == x && ((HaulJob) j).getDestinationY() == y);
     }
 
@@ -42,5 +43,12 @@ public class JobManager {
                 .filter(j -> j.isAvailable() || j.isAssigned())
                 .filter(j -> j instanceof HaulJob)
                 .anyMatch(j -> ((HaulJob) j).getItem() == item);
+    }
+
+    public static boolean hasBuildJobFor(Item item) {
+        return jobs.stream()
+                .filter(j -> j.isAvailable() || j.isAssigned())
+                .filter(j -> j instanceof BuildJob)
+                .anyMatch(j -> ((BuildJob) j).getItem() == item);
     }
 }

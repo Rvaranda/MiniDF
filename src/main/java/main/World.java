@@ -18,6 +18,7 @@ public class World {
     private Tile[] tiles = new Tile[WORLD_WIDTH * WORLD_HEIGHT];
     private List<Dwarf> dwarves = new ArrayList<>();
     private List<Item> items = new ArrayList<>();
+    private List<Item> jobReservedItems = new ArrayList<>();
 
     Random random = new Random();
 
@@ -175,7 +176,12 @@ public class World {
     }
 
     public Item removeItem(Item item) {
+        jobReservedItems.remove(item);
         return items.remove(item) ? item : null;
+    }
+
+    public void reserveItem(Item item) {
+        jobReservedItems.add(item);
     }
 
     public void placeWall(int x, int y) {
@@ -208,6 +214,7 @@ public class World {
     public void checkScateredItems() {
         for (Item item : items) {
             if (JobManager.hasHaulJobFor(item)) continue;
+            if (JobManager.hasBuildJobFor(item)) continue;
 
             Tile itemTile = getTile(item.getX(), item.getY());
             Tile destination = getFreeStockpileTile();
@@ -228,5 +235,11 @@ public class World {
 
     public List<Item> getItems() {
         return items;
+    }
+
+    public List<Item> getAvailableItems() {
+        return items.stream()
+                .filter(i -> !jobReservedItems.contains(i))
+                .toList();
     }
 }
