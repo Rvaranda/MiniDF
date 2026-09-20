@@ -34,7 +34,7 @@ public class JobManager {
 
     public static boolean hasJobFor(Tile tile) {
         return jobs.stream()
-                .filter(j -> j.isAvailable() || j.isAssigned())
+                .filter(j -> j.isAvailable() || j.isAssigned() || j.isWaiting())
                 .anyMatch(j -> j.getTarget() == tile);
     }
 

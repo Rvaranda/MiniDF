@@ -1,5 +1,6 @@
 package main;
 
+import items.Item;
 import jobsystem.BuildJob;
 import jobsystem.CarveTileJob;
 import jobsystem.JobManager;
@@ -191,7 +192,19 @@ public class GameWindow extends JPanel implements Runnable {
         int tileX = worldX / World.TILE_SIZE;
         int tileY = worldY / World.TILE_SIZE;
 
-        JobManager.addJob(new BuildJob(world.getTile(tileX, tileY), world));
+        Tile tile = world.getTile(tileX, tileY);
+        Item item = world.getItem(tileX, tileY);
+        boolean isAnyDwarfOnTile = world.getDwarves().stream()
+                .anyMatch(d -> d.getX() == tileX && d.getY() == tileY);
+
+        boolean canBuildOnTile = tile != null
+                && tile.isTraversable()
+                && !JobManager.hasJobFor(tile)
+                && item == null
+                && !isAnyDwarfOnTile;
+
+        if (canBuildOnTile)
+            JobManager.addJob(new BuildJob(tile, world));
     }
 
     public void start() {

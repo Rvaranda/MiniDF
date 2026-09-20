@@ -18,6 +18,7 @@ public abstract class Job {
     public Dwarf getAssignedDwarf() { return assignedDwarf; }
     public boolean isAvailable() { return state == JobState.AVAILABLE; }
     public boolean isAssigned() { return state == JobState.ASSIGNED; }
+    public boolean isWaiting() { return state == JobState.WAITING; }
 
     public void assignDwarf(Dwarf dwarf) {
         this.assignedDwarf = dwarf;
