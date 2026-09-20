@@ -20,24 +20,7 @@ public class BuildJob extends Job implements JobObserver {
     public BuildJob(Tile target, World world) {
         super(target);
         changeState(JobState.WAITING);
-        Item[] stoneItemsInStockpile = world.getAvailableItems().stream()
-                .filter(i -> {
-                    Tile tile = world.getTile(i.getX(), i.getY());
-                    return i.getType() == ItemType.STONE
-                            && tile.getType() == TileType.STOCKPILE;
-                }).toArray(Item[]::new);
-        // TODO: se nao tiver pedra disponivel, fazer o job procurar periodicamente
-        if (stoneItemsInStockpile.length > 0) {
-            item = stoneItemsInStockpile[0];
-            world.reserveItem(item);
-            haulJob = new HaulJob(
-                    world.getTile(item.getX(), item.getY()),
-                    target,
-                    item
-            );
-            haulJob.addJobObserver(this);
-            JobManager.addJob(haulJob);
-        }
+        searchResources(world);
     }
 
     private Tile[] findPathNextToTarget(Dwarf dwarf) {
@@ -62,6 +45,27 @@ public class BuildJob extends Job implements JobObserver {
         }
 
         return shortestPath;
+    }
+
+    public void searchResources(World world) {
+        Item[] stoneItemsInStockpile = world.getAvailableItems().stream()
+                .filter(i -> {
+                    Tile tile = world.getTile(i.getX(), i.getY());
+                    return i.getType() == ItemType.STONE
+                            && tile.getType() == TileType.STOCKPILE;
+                }).toArray(Item[]::new);
+        // TODO: se nao tiver pedra disponivel, fazer o job procurar periodicamente
+        if (stoneItemsInStockpile.length > 0) {
+            item = stoneItemsInStockpile[0];
+            world.reserveItem(item);
+            haulJob = new HaulJob(
+                    world.getTile(item.getX(), item.getY()),
+                    getTarget(),
+                    item
+            );
+            haulJob.addJobObserver(this);
+            JobManager.addJob(haulJob);
+        }
     }
 
     public Item getItem() {
@@ -89,6 +93,9 @@ public class BuildJob extends Job implements JobObserver {
     public void onComplete(World world) {
         getTarget().buildWall();
         world.removeItem(item);
+        if (getTarget().getType() == TileType.STOCKPILE) {
+            getTarget().setType(TileType.GRASS);
+        }
     }
 
     @Override

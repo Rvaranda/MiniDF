@@ -48,6 +48,7 @@ public class Tile {
     public TileType getType() {
         return type;
     }
+    public void setType(TileType type) { this.type = type; }
 
     public int getX() { return x; }
     public int getY() { return y; }
