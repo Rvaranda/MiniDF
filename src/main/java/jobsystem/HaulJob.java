@@ -61,7 +61,7 @@ public class HaulJob extends Job {
         item.setX(destinationX);
         item.setY(destinationY);
         world.spawnItem(item);
-        observers.forEach(JobObserver::notifyObserver);
+        observers.forEach(JobObserver::onJobComplete);
     }
 
     @Override

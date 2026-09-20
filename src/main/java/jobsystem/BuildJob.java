@@ -104,7 +104,7 @@ public class BuildJob extends Job implements JobObserver {
     }
 
     @Override
-    public void notifyObserver() {
+    public void onJobComplete() {
         changeState(JobState.AVAILABLE);
     }
 }
