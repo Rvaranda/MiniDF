@@ -1,6 +1,7 @@
 package main;
 
 import items.Item;
+import items.ItemType;
 import jobsystem.BuildJob;
 import jobsystem.CarveTileJob;
 import jobsystem.JobManager;
@@ -86,6 +87,7 @@ public class GameWindow extends JPanel implements Runnable {
                         currentState = TestState.values()[index];
                         System.out.println("Current state: " + currentState.name());
                     }
+                    case KeyEvent.VK_F -> world.spawnItemsTeste(ItemType.STONE, 5);
                 }
             }
 

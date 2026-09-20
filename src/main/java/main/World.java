@@ -77,6 +77,14 @@ public class World {
         spawnDwarf(2, 20);
     }
 
+    public void spawnItemsTeste(ItemType itemType, int amount) {
+        Arrays.stream(tiles)
+                .filter(t -> t.getType() == TileType.STOCKPILE)
+                .filter(t -> getItem(t.getX(), t.getY()) == null)
+                .limit(amount)
+                .forEach(t -> spawnItem(itemType, t.getX(), t.getY()));
+    }
+
     private void createStockpileArea(int x1, int y1, int x2, int y2) {
         for (int i = x1; i <= x2; i++) {
             for (int j = y1; j <= y2; j++) {
