@@ -2,6 +2,7 @@ package jobsystem;
 
 import items.Item;
 import main.Tile;
+import main.World;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,13 @@ public class JobManager {
 
         Job job = availableJobs.getFirst();
         return job;
+    }
+
+    public static void evaluateBuildJobs(World world) {
+        jobs.stream()
+                .filter(j -> j instanceof BuildJob)
+                .filter(Job::isWaiting)
+                .forEach(j -> ((BuildJob) j).searchResources(world));
     }
 
     public static boolean isPositionAssignedToHaul(int x, int y) {

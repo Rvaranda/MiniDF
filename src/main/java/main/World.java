@@ -20,6 +20,9 @@ public class World {
     private List<Item> items = new ArrayList<>();
     private List<Item> jobReservedItems = new ArrayList<>();
 
+    private int scateredItemsCheckTimer = 20;
+    private int scateredItemsCheckCounter = 0;
+
     Random random = new Random();
 
     public World() {
@@ -36,8 +39,11 @@ public class World {
         placeWall(60, 30, 70, 40);
         spawnTrees(100);
         spawnDwarf(2, 2);
+        spawnDwarf(2, 4);
+        spawnDwarf(2, 6);
+        spawnDwarf(2, 8);
         //spawnDwarf(2, 4);
-        //createStockpileArea(44, 3, 53, 5);
+        createStockpileArea(44, 3, 53, 5);
     }
 
     // TODO: TESTE - apagar depois
@@ -211,7 +217,7 @@ public class World {
         dwarves.add(new Dwarf(this, spawnX, spawnY));
     }
 
-    public void checkScateredItems() {
+    private void checkScateredItems() {
         for (Item item : items) {
             if (JobManager.hasHaulJobFor(item)) continue;
             if (JobManager.hasBuildJobFor(item)) continue;
@@ -241,5 +247,16 @@ public class World {
         return items.stream()
                 .filter(i -> !jobReservedItems.contains(i))
                 .toList();
+    }
+
+    public void update() {
+        dwarves.forEach(Dwarf::update);
+
+        scateredItemsCheckCounter++;
+        if (scateredItemsCheckCounter >= scateredItemsCheckTimer) {
+            scateredItemsCheckCounter = 0;
+            checkScateredItems();
+            JobManager.evaluateBuildJobs(this);
+        }
     }
 }

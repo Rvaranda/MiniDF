@@ -181,7 +181,6 @@ public class GameWindow extends JPanel implements Runnable {
 
         world.spawnTree(tileX, tileY);
     }
-
     private void buildWall(MouseEvent e) {
         mouseX = e.getX();
         mouseY = e.getY();
@@ -225,12 +224,7 @@ public class GameWindow extends JPanel implements Runnable {
     }
 
     void update(double delta) {
-        scateredItemsCheckCounter++;
-        world.getDwarves().forEach(Dwarf::update);
-        if (scateredItemsCheckCounter > scateredItemsCheckTimer) {
-            scateredItemsCheckCounter = 0;
-            world.checkScateredItems();
-        }
+        world.update();
     }
 
     @Override
