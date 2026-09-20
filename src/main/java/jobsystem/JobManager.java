@@ -27,10 +27,12 @@ public class JobManager {
     }
 
     public static void evaluateBuildJobs(World world) {
-        jobs.stream()
+        List<BuildJob> waitingBuildJobs = jobs.stream()
                 .filter(j -> j instanceof BuildJob)
                 .filter(Job::isWaiting)
-                .forEach(j -> ((BuildJob) j).searchResources(world));
+                .map(j -> (BuildJob) j).toList();
+
+        waitingBuildJobs.forEach(j -> j.searchResources(world));
     }
 
     public static boolean isPositionAssignedToHaul(int x, int y) {

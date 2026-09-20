@@ -11,8 +11,8 @@ import pathfinding.Pathfinder;
 public class BuildJob extends Job implements JobObserver {
     private int progress = 80;
 
-    private Item item;
-    private HaulJob haulJob;
+    private Item item = null;
+    private HaulJob haulJob = null;
 
     // TODO: GAMBIARRA - resolver quando possível
     private Tile[] bestPathToThisJob = null;
@@ -48,6 +48,7 @@ public class BuildJob extends Job implements JobObserver {
     }
 
     public void searchResources(World world) {
+        if (item != null) return;
         Item[] stoneItemsInStockpile = world.getAvailableItems().stream()
                 .filter(i -> {
                     Tile tile = world.getTile(i.getX(), i.getY());
@@ -112,6 +113,7 @@ public class BuildJob extends Job implements JobObserver {
 
     @Override
     public void onJobComplete() {
-        changeState(JobState.AVAILABLE);
+        if (isWaiting())
+            changeState(JobState.AVAILABLE);
     }
 }
