@@ -1,5 +1,7 @@
 package main;
 
+import buildings.BuildingRecipe;
+import buildings.BuildingRecipesManager;
 import items.Item;
 import items.ItemType;
 import jobsystem.BuildJob;
@@ -48,17 +50,15 @@ public class GameWindow extends JPanel implements Runnable {
     // Mouse
     private int mouseX, mouseY;
 
-    private int scateredItemsCheckTimer = 20;
-    private int scateredItemsCheckCounter = 0;
-
     // ---------------- TESTE ---------------------
     private enum TestState {
         DEFAULT,
         MOVE_DWARF,
         SPAWN_TREE,
-        BUILD_WALL
+        BUILD_WALL,
+        BUILD_DOOR
     }
-    private TestState currentState = TestState.DEFAULT;
+    private TestState currentState = TestState.BUILD_WALL;
     // --------------------------------------------
 
     public GameWindow() {
@@ -113,7 +113,8 @@ public class GameWindow extends JPanel implements Runnable {
                         case DEFAULT -> defaultState(e);
                         case MOVE_DWARF -> moveDwarf(e);
                         case SPAWN_TREE -> spawnTree(e);
-                        case BUILD_WALL -> buildWall(e);
+                        case BUILD_WALL -> build(e, "wall");
+                        case BUILD_DOOR -> build(e, "door");
                     }
                 }
                 else if (SwingUtilities.isRightMouseButton(e)) {
@@ -183,7 +184,7 @@ public class GameWindow extends JPanel implements Runnable {
 
         world.spawnTree(tileX, tileY);
     }
-    private void buildWall(MouseEvent e) {
+    private void build(MouseEvent e, String building) {
         mouseX = e.getX();
         mouseY = e.getY();
 
@@ -204,8 +205,9 @@ public class GameWindow extends JPanel implements Runnable {
                 && item == null
                 && !isAnyDwarfOnTile;
 
-        if (canBuildOnTile)
-            JobManager.addJob(new BuildJob(tile, world));
+        BuildingRecipe recipe = BuildingRecipesManager.getRecipe(building);
+        if (recipe != null && canBuildOnTile)
+            JobManager.addJob(new BuildJob(tile, world, recipe));
     }
 
     public void start() {
