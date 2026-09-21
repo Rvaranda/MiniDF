@@ -2,6 +2,7 @@ package main;
 
 import buildings.BuildingRecipe;
 import buildings.BuildingRecipesManager;
+import buildings.BuildingType;
 import items.Item;
 import items.ItemType;
 import jobsystem.BuildJob;
@@ -88,6 +89,7 @@ public class GameWindow extends JPanel implements Runnable {
                         System.out.println("Current state: " + currentState.name());
                     }
                     case KeyEvent.VK_F -> world.spawnItemsTeste(ItemType.STONE, 5);
+                    case KeyEvent.VK_G -> world.spawnItemsTeste(ItemType.WOOD, 5);
                 }
             }
 
@@ -113,8 +115,8 @@ public class GameWindow extends JPanel implements Runnable {
                         case DEFAULT -> defaultState(e);
                         case MOVE_DWARF -> moveDwarf(e);
                         case SPAWN_TREE -> spawnTree(e);
-                        case BUILD_WALL -> build(e, "wall");
-                        case BUILD_DOOR -> build(e, "door");
+                        case BUILD_WALL -> build(e, BuildingType.WALL);
+                        case BUILD_DOOR -> build(e, BuildingType.DOOR);
                     }
                 }
                 else if (SwingUtilities.isRightMouseButton(e)) {
@@ -184,7 +186,7 @@ public class GameWindow extends JPanel implements Runnable {
 
         world.spawnTree(tileX, tileY);
     }
-    private void build(MouseEvent e, String building) {
+    private void build(MouseEvent e, BuildingType buildingType) {
         mouseX = e.getX();
         mouseY = e.getY();
 
@@ -205,9 +207,9 @@ public class GameWindow extends JPanel implements Runnable {
                 && item == null
                 && !isAnyDwarfOnTile;
 
-        BuildingRecipe recipe = BuildingRecipesManager.getRecipe(building);
+        BuildingRecipe recipe = BuildingRecipesManager.getRecipe(buildingType);
         if (recipe != null && canBuildOnTile)
-            JobManager.addJob(new BuildJob(tile, world, recipe));
+            JobManager.addJob(new BuildJob(tile, world, buildingType, recipe));
     }
 
     public void start() {
