@@ -72,7 +72,7 @@ public class BuildJob extends Job implements JobObserver {
                     item
             );
             haulJob.addJobObserver(this);
-            JobManager.addJob(haulJob);
+            world.getJobManager().addJob(haulJob);
         }
     }
 

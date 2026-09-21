@@ -15,6 +15,8 @@ public class World {
     public static final int WORLD_WIDTH = 128;
     public static final int WORLD_HEIGHT = 128;
 
+    private final JobManager jobManager = new JobManager();
+
     private Tile[] tiles = new Tile[WORLD_WIDTH * WORLD_HEIGHT];
     private List<Dwarf> dwarves = new ArrayList<>();
     private List<Item> items = new ArrayList<>();
@@ -156,7 +158,7 @@ public class World {
                     return item == null;
                 }).toList();
         return freeStockpileTiles.stream()
-                .filter(t -> !JobManager.isPositionAssignedToHaul(t.getX(), t.getY()))
+                .filter(t -> !jobManager.isPositionAssignedToHaul(t.getX(), t.getY()))
                 .findFirst().orElse(null);
     }
 
@@ -227,13 +229,13 @@ public class World {
 
     private void checkScateredItems() {
         for (Item item : items) {
-            if (JobManager.hasHaulJobFor(item)) continue;
-            if (JobManager.hasBuildJobFor(item)) continue;
+            if (jobManager.hasHaulJobFor(item)) continue;
+            if (jobManager.hasBuildJobFor(item)) continue;
 
             Tile itemTile = getTile(item.getX(), item.getY());
             Tile destination = getFreeStockpileTile();
             if (destination != null && itemTile.getType() != TileType.STOCKPILE)
-                JobManager.addJob(
+                jobManager.addJob(
                         new HaulJob(
                                 itemTile,
                                 destination,
@@ -257,6 +259,8 @@ public class World {
                 .toList();
     }
 
+    public JobManager getJobManager() { return jobManager; }
+
     public void update() {
         dwarves.forEach(Dwarf::update);
 
@@ -264,7 +268,7 @@ public class World {
         if (scateredItemsCheckCounter >= scateredItemsCheckTimer) {
             scateredItemsCheckCounter = 0;
             checkScateredItems();
-            JobManager.evaluateBuildJobs(this);
+            jobManager.evaluateBuildJobs(this);
         }
     }
 }

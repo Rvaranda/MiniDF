@@ -60,7 +60,7 @@ public class Dwarf {
             // TODO: se um anao não conseguir realizar um job por algum motivo, ele vai ficar
             //  tentando pegar o mesmo job, eventualmente ficando preso em um loop.
             //  Revisitar isso futuramente
-            Job job = JobManager.getFirstAvailableJob();
+            Job job = world.getJobManager().getFirstAvailableJob();
             assignJob(job);
         }
     }

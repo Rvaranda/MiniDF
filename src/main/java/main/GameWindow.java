@@ -7,7 +7,6 @@ import items.Item;
 import items.ItemType;
 import jobsystem.BuildJob;
 import jobsystem.CarveTileJob;
-import jobsystem.JobManager;
 
 import renderer.DwarfRenderer;
 import renderer.ItemRenderer;
@@ -79,7 +78,7 @@ public class GameWindow extends JPanel implements Runnable {
                     case KeyEvent.VK_D -> rightPressed = true;
                     case KeyEvent.VK_R -> {
                         for (Tile treeTile : world.getAllTrees()) {
-                            JobManager.addJob(new CarveTileJob(treeTile));
+                            world.getJobManager().addJob(new CarveTileJob(treeTile));
                         }
                     }
                     case KeyEvent.VK_Q -> {
@@ -153,8 +152,8 @@ public class GameWindow extends JPanel implements Runnable {
             System.out.println("Tree: " + clickedTile.hasTree());
             System.out.println("----------------------------------");
 
-            if (!JobManager.hasJobFor(clickedTile) && clickedTile.isCarveable()) {
-                JobManager.addJob(new CarveTileJob(clickedTile));
+            if (!world.getJobManager().hasJobFor(clickedTile) && clickedTile.isCarveable()) {
+                world.getJobManager().addJob(new CarveTileJob(clickedTile));
             }
         }
     }
@@ -203,13 +202,13 @@ public class GameWindow extends JPanel implements Runnable {
 
         boolean canBuildOnTile = tile != null
                 && tile.isTraversable()
-                && !JobManager.hasJobFor(tile)
+                && !world.getJobManager().hasJobFor(tile)
                 && item == null
                 && !isAnyDwarfOnTile;
 
         BuildingRecipe recipe = BuildingRecipesManager.getRecipe(buildingType);
         if (recipe != null && canBuildOnTile)
-            JobManager.addJob(new BuildJob(tile, world, buildingType, recipe));
+            world.getJobManager().addJob(new BuildJob(tile, world, buildingType, recipe));
     }
 
     public void start() {
