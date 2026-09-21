@@ -143,4 +143,28 @@ public class Pathfinder {
 
         return List.of();
     }
+
+    public static List<Tile> findPathNextTo(World world, Tile origin, Tile target) {
+        int originX = origin.getX();
+        int originY = origin.getY();
+        int targetX = target.getX();
+        int targetY = target.getY();
+        Tile[] neighbors = world.getNeighbors(targetX, targetY);
+        List<Tile> shortestPath = null;
+        for (Tile neighbor : neighbors) {
+            List<Tile> path = findPath(
+                    world,
+                    world.getTile(originX, originY),
+                    neighbor
+            );
+
+            if (path.isEmpty()) continue;
+
+            if (shortestPath == null || path.size() < shortestPath.size()) {
+                shortestPath = List.copyOf(path);
+            }
+        }
+
+        return shortestPath;
+    }
 }

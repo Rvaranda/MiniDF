@@ -30,30 +30,6 @@ public class BuildJob extends Job implements JobObserver {
         searchResources(world);
     }
 
-    private Tile[] findPathNextToTarget(Dwarf dwarf) {
-        int dwarfX = dwarf.getX();
-        int dwarfY = dwarf.getY();
-        int targetX = getTarget().getX();
-        int targetY = getTarget().getY();
-        Tile[] neighbors = dwarf.getWorld().getNeighbors(targetX, targetY);
-        Tile[] shortestPath = null;
-        for (Tile neighbor : neighbors) {
-            Tile[] path = Pathfinder.findPath(
-                    dwarf.getWorld(),
-                    dwarf.getWorld().getTile(dwarfX, dwarfY),
-                    neighbor
-            ).toArray(Tile[]::new);
-
-            if (path.length == 0) continue;
-
-            if (shortestPath == null || path.length < shortestPath.length) {
-                shortestPath = path;
-            }
-        }
-
-        return shortestPath;
-    }
-
     public void searchResources(World world) {
         if (item != null) return;
         Item[] itemsInStockpile = world.getAvailableItems().stream()
@@ -87,13 +63,23 @@ public class BuildJob extends Job implements JobObserver {
             dwarf.setPath(bestPathToThisJob);
         }
         else {
-            dwarf.setPath(findPathNextToTarget(dwarf));
+            dwarf.setPath(
+                    Pathfinder.findPathNextTo(
+                            dwarf.getWorld(),
+                            dwarf.getWorld().getTile(dwarf.getX(), dwarf.getY()),
+                            getTarget()
+                    ).toArray(Tile[]::new)
+            );
         }
     }
 
     @Override
     public boolean canDwarfExecute(Dwarf dwarf) {
-        bestPathToThisJob = findPathNextToTarget(dwarf);
+        bestPathToThisJob = Pathfinder.findPathNextTo(
+                dwarf.getWorld(),
+                dwarf.getWorld().getTile(dwarf.getX(), dwarf.getY()),
+                getTarget()
+        ).toArray(Tile[]::new);
         return bestPathToThisJob != null;
     }
 
