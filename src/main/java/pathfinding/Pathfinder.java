@@ -165,6 +165,6 @@ public class Pathfinder {
             }
         }
 
-        return shortestPath;
+        return shortestPath == null ? List.of() : shortestPath;
     }
 }
