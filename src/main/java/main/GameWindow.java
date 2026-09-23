@@ -9,10 +9,7 @@ import items.ItemType;
 import jobsystem.BuildJob;
 import jobsystem.CarveTileJob;
 
-import renderer.DwarfRenderer;
-import renderer.ItemRenderer;
-import renderer.TileRenderer;
-import renderer.Camera;
+import renderer.*;
 
 import javax.swing.*;
 import java.awt.Color;
@@ -39,9 +36,10 @@ public class GameWindow extends JPanel implements Runnable {
     private final TileRenderer tileRenderer = new TileRenderer();
     private final DwarfRenderer dwarfRenderer = new DwarfRenderer();
     private final ItemRenderer itemRenderer = new ItemRenderer();
-    private final Camera camera = new Camera();
+    private final BuildingRenderer buildingRenderer = new BuildingRenderer();
 
     // Camera
+    private final Camera camera = new Camera();
     private double cameraSpeed = 300;
     private boolean upPressed = false;
     private boolean downPressed = false;
@@ -258,6 +256,7 @@ public class GameWindow extends JPanel implements Runnable {
         }
 
         world.getItems().forEach(i -> itemRenderer.render(i, camera, g2d));
+        world.getBuildings().forEach(b -> buildingRenderer.render(b, camera, g2d));
         world.getDwarves().forEach(d -> dwarfRenderer.render(d, camera, g2d));
     }
 
