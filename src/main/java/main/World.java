@@ -12,12 +12,13 @@ import java.util.Random;
 
 public class World {
     public static final int TILE_SIZE = 16;
-    public static final int WORLD_WIDTH = 128;
-    public static final int WORLD_HEIGHT = 128;
+
+    public final int WORLD_WIDTH;
+    public final int WORLD_HEIGHT;
 
     private final JobManager jobManager = new JobManager();
 
-    private Tile[] tiles = new Tile[WORLD_WIDTH * WORLD_HEIGHT];
+    private Tile[] tiles;
     private List<Dwarf> dwarves = new ArrayList<>();
     private List<Item> items = new ArrayList<>();
     private List<Item> jobReservedItems = new ArrayList<>();
@@ -28,11 +29,9 @@ public class World {
     Random random = new Random();
 
     public World() {
-        for (int i = 0; i < tiles.length; i++) {
-            int x = i % WORLD_WIDTH;
-            int y = i / WORLD_WIDTH;
-            tiles[i] = new Tile(x, y, TileType.GRASS);
-        }
+        WORLD_WIDTH = 128;
+        WORLD_HEIGHT = 128;
+        initializeTiles();
 
         //spawnTrees(100);
         //spawnDwarf(3, 3);
@@ -41,11 +40,31 @@ public class World {
         placeWall(60, 30, 70, 40);
         spawnTrees(100);
         spawnDwarf(2, 2);
-        spawnDwarf(2, 4);
-        spawnDwarf(2, 6);
-        spawnDwarf(2, 8);
-        //spawnDwarf(2, 4);
+//        spawnDwarf(2, 4);
+//        spawnDwarf(2, 6);
+//        spawnDwarf(2, 8);
+//        spawnDwarf(2, 10);
+//        spawnDwarf(2, 12);
+//        spawnDwarf(2, 14);
+//        spawnDwarf(2, 16);
+//        spawnDwarf(2, 18);
+//        spawnDwarf(2, 20);
         createStockpileArea(44, 3, 53, 5);
+    }
+
+    public World(int width, int height) {
+        WORLD_WIDTH = width;
+        WORLD_HEIGHT = height;
+        initializeTiles();
+    }
+
+    private void initializeTiles() {
+        tiles = new Tile[WORLD_WIDTH * WORLD_HEIGHT];
+        for (int i = 0; i < tiles.length; i++) {
+            int x = i % WORLD_WIDTH;
+            int y = i / WORLD_WIDTH;
+            tiles[i] = new Tile(x, y, TileType.GRASS);
+        }
     }
 
     // TODO: TESTE - apagar depois
