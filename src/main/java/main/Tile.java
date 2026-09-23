@@ -1,6 +1,7 @@
 package main;
 
 import buildings.Building;
+import buildings.BuildingType;
 
 public class Tile {
     private final int x;
@@ -61,6 +62,17 @@ public class Tile {
         return !hasTree
                 && type != TileType.WALL
                 && (building == null || building.isTraversable());
+    }
+
+    public boolean canPlanThrough() {
+        if (hasTree || type == TileType.WALL)
+            return false;
+
+        if (building == null)
+            return true;
+
+        return building.isTraversable()
+                || building.getType() == BuildingType.DOOR;
     }
 
     public boolean isCarveable() {

@@ -65,7 +65,7 @@ public class Pathfinder {
 
             Tile neighbor = world.getTile(nx, ny);
 
-            if (neighbor == null || !neighbor.isTraversable())
+            if (neighbor == null || !neighbor.canPlanThrough())
                 continue;
 
             boolean diagonal = dx != 0 && dy != 0;

@@ -1,8 +1,9 @@
 package main;
 
+import buildings.Building;
+import buildings.BuildingType;
 import items.Item;
 import jobsystem.Job;
-import jobsystem.JobManager;
 import pathfinding.Pathfinder;
 
 import java.util.List;
@@ -42,8 +43,16 @@ public class Dwarf {
         }
 
         pathIndex++;
-        x = path[pathIndex].getX();
-        y = path[pathIndex].getY();
+        Tile next = path[pathIndex];
+        if (!next.isTraversable()) {
+            Building building = next.getBuilding();
+            if (building != null && building.getType() == BuildingType.DOOR) {
+                building.setOpen(true);
+            }
+        }
+
+        x = next.getX();
+        y = next.getY();
 
         if (x == path[path.length-1].getX() && y == path[path.length-1].getY()) {
             pathIndex = 0;
