@@ -1,5 +1,8 @@
 package pathfinding;
 
+import buildings.Building;
+import buildings.BuildingType;
+import main.Dwarf;
 import main.Tile;
 import main.World;
 import org.junit.jupiter.api.Test;
@@ -47,5 +50,42 @@ class PathfinderTest {
             assertNotEquals(parede, t, "Path não deveria incluir a parede");
             assertTrue(t.isTraversable());
         }
+    }
+
+    @Test
+    void anaoConsegueAbrirEPassarPorPortaFechada() {
+        World world = new World(10, 1);
+        Dwarf dwarf = new Dwarf(world, 0, 0);
+        Tile origin = world.getTile(dwarf.getX(), dwarf.getY());
+        Tile destination = world.getTile(9, 0);
+
+        assertNotNull(origin);
+        assertNotNull(destination);
+
+        world.getDwarves().add(dwarf);
+
+        Building door = new Building(5, 0, BuildingType.DOOR);
+        door.setOpen(false);
+
+        world.addBuilding(door);
+
+        Tile doorTile = world.getTile(door.getX(), door.getY());
+        assertFalse(doorTile.isTraversable());
+
+        Tile[] path = Pathfinder.findPath(world, origin, destination).toArray(Tile[]::new);
+        assertNotEquals(0, path.length);
+
+        dwarf.setPath(path);
+
+        for (int i = 0; i < 20; i++) {
+            world.update();
+        }
+
+        assertNotNull(world.getTile(door.getX(), door.getY()).getBuilding());
+        assertTrue(doorTile.isTraversable());
+        assertEquals(
+                destination,
+                world.getTile(dwarf.getX(), dwarf.getY())
+        );
     }
 }

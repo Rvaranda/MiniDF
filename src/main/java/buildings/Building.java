@@ -5,10 +5,10 @@ public class Building {
     private final BuildingType type;
     private boolean open;
 
-    public Building(int x, int y, BuildingRecipe recipe) {
+    public Building(int x, int y, BuildingType type) {
         this.x = x;
         this.y = y;
-        this.type = recipe.type();
+        this.type = type;
         open = false;
     }
 

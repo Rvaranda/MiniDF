@@ -82,7 +82,7 @@ public class BuildJob extends Job implements JobObserver {
 
     @Override
     public void onComplete(World world) {
-        world.addBuilding(new Building(getTarget().getX(), getTarget().getY(), recipe));
+        world.addBuilding(new Building(getTarget().getX(), getTarget().getY(), recipe.type()));
 
         world.removeItem(item);
         if (getTarget().getType() == TileType.STOCKPILE) {
