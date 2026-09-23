@@ -2,7 +2,6 @@ package jobsystem;
 
 import buildings.Building;
 import buildings.BuildingRecipe;
-import buildings.BuildingType;
 import items.Item;
 import main.Dwarf;
 import main.Tile;
@@ -14,18 +13,16 @@ public class BuildJob extends Job implements JobObserver {
     private int work;
 
     private BuildingRecipe recipe;
-    private BuildingType buildingType;
     private Item item = null;
     private HaulJob haulJob = null;
 
     // TODO: GAMBIARRA - resolver quando possível
     private Tile[] bestPathToThisJob = null;
 
-    public BuildJob(Tile target, World world, BuildingType buildingType, BuildingRecipe recipe) {
+    public BuildJob(Tile target, World world, BuildingRecipe recipe) {
         super(target);
         work = recipe.work();
         this.recipe = recipe;
-        this.buildingType = buildingType;
         changeState(JobState.WAITING);
         searchResources(world);
     }
@@ -85,7 +82,7 @@ public class BuildJob extends Job implements JobObserver {
 
     @Override
     public void onComplete(World world) {
-        getTarget().setBuilding(new Building(buildingType));
+        world.addBuilding(new Building(getTarget().getX(), getTarget().getY(), recipe));
 
         world.removeItem(item);
         if (getTarget().getType() == TileType.STOCKPILE) {

@@ -1,5 +1,6 @@
 package main;
 
+import buildings.Building;
 import buildings.BuildingRecipe;
 import buildings.BuildingRecipesManager;
 import buildings.BuildingType;
@@ -147,12 +148,13 @@ public class GameWindow extends JPanel implements Runnable {
         Tile clickedTile = world.getTile(tileX, tileY);
 
         if (clickedTile != null) {
-            System.out.println("X: " + clickedTile.getX() + "\tY: " + clickedTile.getY());
-            System.out.println("Type: " + clickedTile.getType().name());
-            System.out.println("Tree: " + clickedTile.hasTree());
-            System.out.println("----------------------------------");
+            printTile(clickedTile);
+            Building building = clickedTile.getBuilding();
 
-            if (!world.getJobManager().hasJobFor(clickedTile) && clickedTile.isCarveable()) {
+            if (building != null && building.getType() == BuildingType.DOOR) {
+                building.setOpen(!building.isTraversable());
+            }
+            else if (!world.getJobManager().hasJobFor(clickedTile) && clickedTile.isCarveable()) {
                 world.getJobManager().addJob(new CarveTileJob(clickedTile));
             }
         }
@@ -208,7 +210,20 @@ public class GameWindow extends JPanel implements Runnable {
 
         BuildingRecipe recipe = BuildingRecipesManager.getRecipe(buildingType);
         if (recipe != null && canBuildOnTile)
-            world.getJobManager().addJob(new BuildJob(tile, world, buildingType, recipe));
+            world.getJobManager().addJob(new BuildJob(tile, world, recipe));
+    }
+
+    private void printTile(Tile tile) {
+        Building building = tile.getBuilding();
+        System.out.println("X: " + tile.getX() + "\tY: " + tile.getY());
+        System.out.println("Type: " + tile.getType().name());
+        if (building != null) {
+            System.out.println("Building: " + building.getType().name());
+        }
+        else {
+            System.out.println("Tree: " + tile.hasTree());
+        }
+        System.out.println("----------------------------------");
     }
 
     public void start() {

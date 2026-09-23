@@ -1,5 +1,6 @@
 package main;
 
+import buildings.Building;
 import items.Item;
 import items.ItemType;
 import jobsystem.HaulJob;
@@ -22,6 +23,7 @@ public class World {
     private List<Dwarf> dwarves = new ArrayList<>();
     private List<Item> items = new ArrayList<>();
     private List<Item> jobReservedItems = new ArrayList<>();
+    private List<Building> buildings = new ArrayList<>();
 
     private int scateredItemsCheckTimer = 20;
     private int scateredItemsCheckCounter = 0;
@@ -267,15 +269,30 @@ public class World {
     public List<Dwarf> getDwarves() {
         return dwarves;
     }
-
     public List<Item> getItems() {
         return items;
+    }
+    public List<Building> getBuildings() {
+        return buildings;
     }
 
     public List<Item> getAvailableItems() {
         return items.stream()
                 .filter(i -> !jobReservedItems.contains(i))
                 .toList();
+    }
+
+    public void addBuilding(Building building) {
+        buildings.add(building);
+        getTile(building.getX(), building.getY()).setBuilding(building);
+    }
+
+    public Building getBuilding(int x, int y) {
+        Tile tile = getTile(x, y);
+        if (tile != null) {
+            return tile.getBuilding();
+        }
+        return null;
     }
 
     public JobManager getJobManager() { return jobManager; }
